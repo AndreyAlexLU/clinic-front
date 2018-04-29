@@ -1,0 +1,22 @@
+{
+  "name": "clinic-front",
+  "version": "1.0.0",
+  "description": "private clinic",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndreyAlexLU/clinic-front.git"
+  },
+  "author": "Andrey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AndreyAlexLU/clinic-front/issues"
+  },
+  "homepage": "https://github.com/AndreyAlexLU/clinic-front#readme",
+  "dependencies": {
+    "react": "^16.3.2"
+  }
+}
