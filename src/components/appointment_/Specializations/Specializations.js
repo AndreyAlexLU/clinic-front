@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Route } from 'react-router-dom';
 import './specializations.css';
 import Specialization from "./Specialization/Specialization";
+import {PageHeader} from "react-bootstrap";
 
 const specializations = [
     {
@@ -21,15 +22,21 @@ const specializations = [
 export default class Appointment extends React.Component {
     render() {
         return (
-            <div>
-                { specializations.map(specialization =>
-                    <Specialization
-                        key={ specialization.id }
-                        specialization={ specialization }
-                    />
-                ) }
-                { this.props.specialization }
-            </div>
+            <Fragment>
+                <PageHeader>
+                    Выберите специализацию врача
+                </PageHeader>
+
+                <div className='specializations'>
+                    { specializations.map(specialization =>
+                        <Specialization
+                            key={ specialization.id }
+                            specialization={ specialization }
+                        />
+                    ) }
+                    { this.props.specialization }
+                </div>
+            </Fragment>
         )
     }
 }

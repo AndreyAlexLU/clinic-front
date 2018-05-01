@@ -1,12 +1,20 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, NavLink } from 'react-router-dom';
 import './specialization.css';
 
 export default class Appointment extends React.Component {
     render() {
+        const { specialization } = this.props;
         return (
-            <div>
-                { this.props.specialization.name }
+            <div className='specialization'>
+                <NavLink
+                    to={ `/patient/appointment/${specialization.id}` }
+                    className='specialization-container'
+                >
+                    <span className='specialization-name'>
+                        { specialization.name }
+                    </span>
+                </NavLink>
             </div>
         )
     }
