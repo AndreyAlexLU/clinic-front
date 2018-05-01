@@ -1,0 +1,7 @@
+.content-wrapper {
+    display: flex;
+    width: 960px;
+    background-color: white;
+    min-height: 1000px;
+    margin: 0 auto;
+}

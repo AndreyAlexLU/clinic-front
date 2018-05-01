@@ -1,0 +1,21 @@
+.content-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 180px;
+    background: linear-gradient(#383390, #8d94e2);
+}
+
+.content-menu-item {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px;
+    text-align: center;
+    width: 160px;
+    font-size: 18px;
+    color: white;
+}
+
+.content-menu-item:hover, .content-menu-item-active {
+    background-color: #000029;
+}
