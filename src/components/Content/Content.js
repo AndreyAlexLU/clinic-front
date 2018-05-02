@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import './content.css';
 import ContentMenu from "./ContentMenu/ContentMenu";
-import Appointment from "../appointment_/Appointment/Appointment";
+import Appointment from "../appointment/Appointment/Appointment";
 
 export class Content extends React.Component {
     render() {
