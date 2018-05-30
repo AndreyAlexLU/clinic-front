@@ -15,7 +15,13 @@ module.exports =  {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['react']
+                    presets: ['env', 'stage-0', 'react'],
+                    plugins: [
+                        'transform-class-properties',
+                        'transform-es3-member-expression-literals',
+                        'transform-es3-property-literals',
+                        'transform-object-rest-spread'
+                    ]
                 }
             },
             {
@@ -24,7 +30,16 @@ module.exports =  {
                     { loader: 'style-loader' },
                     { loader: 'css-loader' },
                 ]
-            }
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
+                    { loader: 'less-loader' },
+                ]
+            },
+            { test: /\.(jpg|png|gif|svg|woff|woff2|eot)$/, loader: 'file-loader' },
         ]
     }
 };

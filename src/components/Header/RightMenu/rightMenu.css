@@ -1,0 +1,12 @@
+.right-menu-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.right-menu-user {
+    margin-right: 10px;
+}
+
+.right-menu-user-icon {
+    margin-right: 5px;
+}
