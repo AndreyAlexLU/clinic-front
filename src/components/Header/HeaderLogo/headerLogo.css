@@ -1,5 +1,6 @@
 .header-logo-wrapper {
-
+    display: flex;
+    align-items: center;
 }
 
 .header-logo-img {
@@ -8,5 +9,5 @@
 }
 
 .header-logo-title {
-
+    font-weight: 600;
 }

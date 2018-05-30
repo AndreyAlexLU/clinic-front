@@ -7,9 +7,11 @@ export default class Header extends React.Component {
         return (
             <header className='header'>
                 <HeaderLogo
-                    logoSrc='https://d33wubrfki0l68.cloudfront.net/f35d49d959deb5bfd7deb80c2668128367e2917c/eb35e/images/logo.svg'
-                    title='Клиника Юшкина'
+                    logoSrc='https://blgbt.org/wp-content/uploads/2015/09/BLGBT_logo_marque.png'
+                    title='Клиника "Здоровье"'
                 />
+                
+                
 
             </header>
         )
