@@ -7,15 +7,15 @@ import {PageHeader} from "react-bootstrap";
 const specializations = [
     {
         id: '0d9042d1-04a5-410f-933d-768a0293c7f9',
-        name: 'Уролог'
+        name: 'Невролог'
     },
     {
         id: '5819e7e5-9e9b-4b6e-8848-9fb0cca76c5d',
-        name: 'Проктолог'
+        name: 'Терапевт'
     },
     {
         id: '5819e7e5-9e9b-4b6e-8888-9fb0cca76c5d',
-        name: 'Гинеколог'
+        name: 'Гастроэнтеролог'
     },
 ];
 
