@@ -39,7 +39,7 @@ export default class PatientMenu extends Component<Props, *> {
                     <NavLink
                         className='content-menu-item'
                         activeClassName='content-menu-item-active'
-                        to='/patient/info'
+                        to='/patient/appointment'
                     >
                         Запись на прием
                     </NavLink>
