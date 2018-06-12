@@ -4,6 +4,7 @@ import { DoctorsApi } from '../api/doctor';
 import {
     LOAD_DOCTORS,
     LOAD_DOCTORS_BY_SPEC,
+    GET_SPECIALIZATIONS,
     START,
     FAIL,
     SUCCESS,
@@ -18,9 +19,25 @@ export const loadDoctorsAction = () => {
         try {
             dispatch(loadDoctorsStart());
             const response = await DoctorsApi.get();
-            dispatch(loadDoctorsSuccess(response));
+            dispatch(loadDoctorsSuccess(response.data));
         } catch (err) {
             dispatch(loadDoctorsFail(err));
+        }
+    };
+};
+
+const getSpecializationsStart = createAction(GET_SPECIALIZATIONS + START);
+const getSpecializationsSuccess = createAction(GET_SPECIALIZATIONS + SUCCESS);
+const getSpecializationsFail = createAction(GET_SPECIALIZATIONS + FAIL);
+
+export const getSpecializationsAction = () => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(getSpecializationsStart());
+            const response = await DoctorsApi.getSpecs();
+            dispatch(getSpecializationsSuccess(response.data));
+        } catch (err) {
+            dispatch(getSpecializationsFail(err));
         }
     };
 };
@@ -34,7 +51,7 @@ export const loadDoctorsBySpecAction = (spec: string) => {
         try {
             dispatch(loadDoctorsStart());
             const response = await DoctorsApi.getBySpec(spec);
-            dispatch(loadDoctorsSuccess(response));
+            dispatch(loadDoctorsSuccess(response.data));
         } catch (err) {
             dispatch(loadDoctorsFail(err));
         }

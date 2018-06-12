@@ -1,6 +1,6 @@
 import { axiosInstance } from '../axiosInstance';
 
-const prefix = '/api/timetable';
+const prefix = '/timetable';
 
 export const TimetableApi = {
     getUnits(date) {
