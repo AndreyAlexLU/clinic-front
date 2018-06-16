@@ -1,5 +1,6 @@
 // @flow
-import React from 'react';
+import React, { Fragment } from 'react';
+import cn from 'classnames';
 import './timetable.css';
 import { connect } from 'react-redux';
 import { loadTimetableAction } from '../../../actions/timetable';
@@ -27,11 +28,20 @@ class TimeTable extends React.Component<Props, *> {
         if (timetable && timetable.length > 0) {
             return (
                 <div className='timetable'>
-                    { timetable.map(timetableWeek => (
-                        <div className='timetable-row'>
-                            { timetableWeek.map(timetableUnit => this.renderCell(timetableUnit)) }
-                        </div>
-                    )) }
+                    { this.renderTimetableHeader() }
+                    { timetable.map((timetableWeek, index: number) => {
+                        const classes = cn({
+                           'timetable-row': true,
+                           'timetable-row-first': index === 0
+                        });
+                        
+                        return (
+                            <div className={ classes }>
+                                { timetableWeek.map(timetableUnit => this.renderCell(timetableUnit)) }
+                            </div>
+                        );
+                        
+                    }) }
                 </div>
     
             );
@@ -41,11 +51,30 @@ class TimeTable extends React.Component<Props, *> {
         return null;
     }
     
+    renderTimetableHeader() {
+        const days = [
+            'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс',
+        ];
+        return (
+            <div className='timetable-header'>
+                { days.map(day => (
+                    <div className='timetable-header-item'>
+                        { day }
+                    </div>
+                ))}
+            </div>
+        )
+    }
+    
     renderCell(timetableUnit: TimeTableUnit) {
         const date: Date = new Date(timetableUnit.date);
+        const classes = cn({
+            'timetable-cell': true,
+            'timetable-cell-empty': timetableUnit.count === 0,
+        });
         
         return (
-            <div className='timetable-column'>
+            <div className={ classes }>
                 <div>
                     { date.getDate() }
                 </div>
@@ -53,7 +82,8 @@ class TimeTable extends React.Component<Props, *> {
                     { this.getMonthByNumber(date.getMonth())[ 1 ] }
                 </div>
                 <div>
-                    Талонов { timetableUnit.count }
+                    { timetableUnit.count === 0 && 'Нет талонов'}
+                    { timetableUnit.count > 0 && `${ timetableUnit.count } талонов`}
                 </div>
             </div>
         )
