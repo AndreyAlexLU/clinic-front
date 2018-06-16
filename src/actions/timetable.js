@@ -1,8 +1,8 @@
 import { createAction } from 'redux-actions';
-import { DoctorsApi } from '../api/doctor';
 
 import {
     LOAD_TIMETABLE,
+    LOAD_TIMETABLE_UNITS,
     START,
     FAIL,
     SUCCESS,
@@ -24,3 +24,20 @@ export const loadTimetableAction = (date: string) => {
         }
     };
 };
+
+const loadTimetableUnitsStart = createAction(LOAD_TIMETABLE_UNITS + START);
+const loadTimetableUnitsSuccess = createAction(LOAD_TIMETABLE_UNITS + SUCCESS);
+const loadTimetableUnitsFail = createAction(LOAD_TIMETABLE_UNITS + FAIL);
+
+export const loadTimetableUnitsAction = (date: string) => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(loadTimetableUnitsStart());
+            const response = await TimetableApi.getUnits(date);
+            dispatch(loadTimetableUnitsSuccess(response.data));
+        } catch (err) {
+            dispatch(loadTimetableUnitsFail(err));
+        }
+    };
+};
+

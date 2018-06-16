@@ -10,8 +10,11 @@ export default class Appointment extends React.Component {
         return (
             <div className='appointment'>
                 <Switch>
-                    <Route path='/patient/appointment/:specialization/:doctorId' render={
-                        ({ match }) => <TimeTable doctorId={ match.params.doctorId }/>
+                    <Route path='/patient/appointment/:specializationId/:doctorId' render={
+                        ({ match }) => <TimeTable
+                            specializationId={ match.params.specializationId }
+                            doctorId={ match.params.doctorId }
+                        />
                     }/>
                     <Route path='/patient/appointment/:specializationId' render={
                         ({ match }) => <Doctors specializationId={ match.params.specializationId }/>

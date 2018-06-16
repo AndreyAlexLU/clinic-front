@@ -3,16 +3,24 @@ import React, { Fragment } from 'react';
 import cn from 'classnames';
 import './timetable.css';
 import { connect } from 'react-redux';
-import { loadTimetableAction } from '../../../actions/timetable';
-import timetable from '../../../reducers/timetable';
-import type { TimeTableUnit } from '../../../models/TimeTable';
+import { loadTimetableAction, loadTimetableUnitsAction } from '../../../actions/timetable';
+import { NavLink, Route } from 'react-router-dom';
+import TimeTableUnits from './TimeTableUnits/TimeTableUnits';
+import withRouter from 'react-router-dom/es/withRouter';
+import type { TimeTableItem } from '../../../models/TimeTableItem';
 
 type Props = {
-    timetable: TimeTableUnit[][],
-    loading: boolean,
-    loadError: ?Error,
+    specializationId: string,
+    doctorId: string,
+    timetable: TimeTableItem[][],
+    timetableUnits: Object[],
+    timetableLoading: boolean,
+    timetableUnitsLoading: boolean,
+    timetableLoadError: ?Error,
+    timetableUnitsLoadError: ?Error,
     
     getTimeTable: (date: string) => void,
+    getTimeTableUnits: (date: string) => void,
 };
 
 class TimeTable extends React.Component<Props, *> {
@@ -23,27 +31,44 @@ class TimeTable extends React.Component<Props, *> {
     }
     
     render() {
-        const { timetable } = this.props;
+        const {
+            timetable, specializationId, doctorId, timetableUnits,
+            getTimeTableUnits, timetableUnitsLoading, timetableUnitsLoadError,
+        } = this.props;
         
         if (timetable && timetable.length > 0) {
             return (
-                <div className='timetable'>
-                    { this.renderTimetableHeader() }
-                    { timetable.map((timetableWeek, index: number) => {
-                        const classes = cn({
-                           'timetable-row': true,
-                           'timetable-row-first': index === 0
-                        });
-                        
-                        return (
-                            <div className={ classes }>
-                                { timetableWeek.map(timetableUnit => this.renderCell(timetableUnit)) }
-                            </div>
-                        );
-                        
-                    }) }
+                <div className='timetable-wrapper'>
+                    <div className='timetable'>
+                        { this.renderTimetableHeader() }
+                        { timetable.map((timetableWeek, index: number) => {
+                            const classes = cn({
+                                'timetable-row': true,
+                                'timetable-row-first': index === 0
+                            });
+                            
+                            return (
+                                <div className={ classes }>
+                                    { timetableWeek.map(timetableUnit => this.renderCell(timetableUnit)) }
+                                </div>
+                            );
+                            
+                        }) }
+                    </div>
+                    
+                    <Route
+                        path={ `/patient/appointment/${specializationId}/${doctorId}/:date` }
+                        render={
+                            ({ match }) => <TimeTableUnits
+                                date={ match.params.date }
+                                units={ timetableUnits }
+                                getUnits={ getTimeTableUnits }
+                                loading={ timetableUnitsLoading }
+                                loadError={ timetableUnitsLoadError }
+                            />
+                        }
+                    />
                 </div>
-    
             );
         }
         
@@ -61,12 +86,13 @@ class TimeTable extends React.Component<Props, *> {
                     <div className='timetable-header-item'>
                         { day }
                     </div>
-                ))}
+                )) }
             </div>
         )
     }
     
-    renderCell(timetableUnit: TimeTableUnit) {
+    renderCell(timetableUnit: TimeTableItem) {
+        const { specializationId, doctorId } = this.props;
         const date: Date = new Date(timetableUnit.date);
         const classes = cn({
             'timetable-cell': true,
@@ -74,7 +100,10 @@ class TimeTable extends React.Component<Props, *> {
         });
         
         return (
-            <div className={ classes }>
+            <NavLink
+                className={ classes }
+                to={ `/patient/appointment/${specializationId}/${doctorId}/${timetableUnit.date}` }
+            >
                 <div>
                     { date.getDate() }
                 </div>
@@ -82,10 +111,10 @@ class TimeTable extends React.Component<Props, *> {
                     { this.getMonthByNumber(date.getMonth())[ 1 ] }
                 </div>
                 <div>
-                    { timetableUnit.count === 0 && 'Нет талонов'}
-                    { timetableUnit.count > 0 && `${ timetableUnit.count } талонов`}
+                    { timetableUnit.count === 0 && 'Нет талонов' }
+                    { timetableUnit.count > 0 && `${ timetableUnit.count } талонов` }
                 </div>
-            </div>
+            </NavLink>
         )
     }
     
@@ -120,16 +149,20 @@ class TimeTable extends React.Component<Props, *> {
 const props = ({ timetable }) => {
     return {
         timetable: timetable.timetable,
-        loading: timetable.timetableLoading,
-        loadError: timetable.timetableLoadError,
+        timetableUnits: timetable.timetableUnits,
+        timetableLoading: timetable.timetableLoading,
+        timetableLoadError: timetable.timetableLoadError,
+        timetableUnitsLoading: timetable.timetableUnitsLoading,
+        timetableUnitsLoadError: timetable.timetableUnitsLoadError,
     };
 };
 
 const actions = {
     getTimeTable: loadTimetableAction,
+    getTimeTableUnits: loadTimetableUnitsAction,
 };
 
-export default connect(props, actions)(TimeTable);
+export default withRouter(connect(props, actions)(TimeTable));
 
 
 

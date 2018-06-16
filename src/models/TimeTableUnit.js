@@ -1,0 +1,11 @@
+// @flow
+
+export type TimeTableUnitType = {|
+    id: string,
+    doctorPersonalNumber: number,
+    patientId: string,
+    status: string,
+    date: string,
+    startTime: string,
+    endTime: string,
+|};

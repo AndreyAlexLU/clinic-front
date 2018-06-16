@@ -1,6 +1,6 @@
 // @flow
 
-export type TimeTableUnit = {|
+export type TimeTableItem = {|
     count: number,
     date: string,
 |};

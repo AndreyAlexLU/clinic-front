@@ -1,21 +1,23 @@
 // @flow
 
 import {
-    LOAD_DOCTORS,
-    LOAD_DOCTORS_BY_SPEC,
-    GET_SPECIALIZATIONS,
     START,
     SUCCESS,
-    FAIL, LOAD_TIMETABLE,
+    FAIL,
+    LOAD_TIMETABLE,
+    LOAD_TIMETABLE_UNITS,
 } from '../constants/actions';
 import { handleActions } from 'redux-actions';
-import type { TimeTableUnit } from '../models/TimeTable';
+import type { TimeTableItem } from '../models/TimeTableItem';
 
 const initialState = {
     timetable: [],
+    timetableUnits: [],
     
     timetableLoading: false,
     timetableLoadError: null,
+    timetableUnitsLoading: false,
+    timetableUnitsLoadError: null,
 };
 
 export default handleActions({
@@ -42,10 +44,31 @@ export default handleActions({
             timetableLoadError: payload,
         }
     },
+    [ LOAD_TIMETABLE_UNITS + START ]: (state, { payload }) => {
+        return {
+            ...state,
+            timetableUnitsLoading: true,
+            timetableUnitsLoadError: null,
+        }
+    },
+    [ LOAD_TIMETABLE_UNITS + SUCCESS ]: (state, { payload }) => {
+        return {
+            ...state,
+            timetableUnitsLoading: false,
+            timetableUnits: payload,
+        }
+    },
+    [ LOAD_TIMETABLE_UNITS + FAIL ]: (state, { payload }) => {
+        return {
+            ...state,
+            timetableUnitsLoading: false,
+            timetableUnitsLoadError: payload,
+        }
+    },
 }, initialState);
 
-function transformTimeTable(timetable: TimeTableUnit[][]) {
-    return timetable.reduce((result: TimeTableUnit[][], current: TimeTableUnit[]) => {
+function transformTimeTable(timetable: TimeTableItem[][]) {
+    return timetable.reduce((result: TimeTableItem[][], current: TimeTableItem[]) => {
         const index: number = result.length - 1;
         const currentTimeTableUnit = current[0];
         const date: Date = new Date(currentTimeTableUnit.date);
