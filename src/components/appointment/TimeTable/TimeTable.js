@@ -1,24 +1,50 @@
+// @flow
 import React from 'react';
 import './timetable.css';
-import DatePicker from 'react-date-picker';
+import { connect } from 'react-redux';
+import { loadTimetableAction } from '../../../actions/timetable';
+import timetable from '../../../reducers/timetable';
+import type { TimeTableUnit } from '../../../models/TimeTable';
 
-export default class TimeTable extends React.Component {
+type Props = {
+    timetable: TimeTableUnit[],
+    loading: boolean,
+    loadError: ?Error,
+    
+    getTimeTable: (date: string) => void,
+};
+
+class TimeTable extends React.Component<Props, *> {
+    
+    componentDidMount() {
+        const currentDate: Date = new Date();
+        this.props.getTimeTable(currentDate.toISOString());
+    }
+    
     render() {
-        return (
-            <div className='timetable'>
-                { [...Array(5).keys()].map(i => (
-                    <div className='timetable-row'>
-                        { [...Array(7).keys()].map(j => this.renderCell(i, j))}
-                    </div>
-                ))}
-            </div>
-
-        );
+        const { timetable } = this.props;
+        
+        if (timetable && timetable.length > 0) {
+            return (
+                <div className='timetable'>
+                    { [ ...Array(5).keys() ].map(i => (
+                        <div className='timetable-row'>
+                            { [ ...Array(7).keys() ].map(j => this.renderCell(i, j)) }
+                        </div>
+                    )) }
+                </div>
+    
+            );
+        }
+        
+        // TODO loading?
+        return null;
     }
     
     renderCell(i, j) {
-        const currentDate: Date = new Date();
-        const date: Date = this.getNextDate(currentDate, 7*i + j);
+        const { timetable } = this.props;
+        const timetableUnit: TimeTableUnit = timetable[ 7 * i + j ][ 0 ];
+        const date: Date = new Date(timetableUnit.date);
         
         return (
             <div className='timetable-column'>
@@ -26,7 +52,7 @@ export default class TimeTable extends React.Component {
                     { date.getDate() }
                 </div>
                 <div>
-                    { this.getMonthByNumber(date.getMonth())[1] }
+                    { this.getMonthByNumber(date.getMonth())[ 1 ] }
                 </div>
             </div>
         )
@@ -41,26 +67,39 @@ export default class TimeTable extends React.Component {
     
     getMonthByNumber(monthNumber: number) {
         const map = {
-            0: ['Январь', 'Января'],
-            1: ['Февраль', 'Февраля'],
-            2: ['Март', 'Марта'],
-            3: ['Апрель', 'Апреля'],
-            4: ['Май', 'Мая'],
-            5: ['Июнь', 'Июня'],
-            6: ['Июль', 'Июля'],
-            7: ['Август', 'Августа'],
-            8: ['Сентябрь', 'Сентября'],
-            9: ['Октябрь', 'Октября'],
-            10: ['Ноябрь', 'Ноября'],
-            11: ['Декабрь', 'Декабря'],
+            0: [ 'Январь', 'Января' ],
+            1: [ 'Февраль', 'Февраля' ],
+            2: [ 'Март', 'Марта' ],
+            3: [ 'Апрель', 'Апреля' ],
+            4: [ 'Май', 'Мая' ],
+            5: [ 'Июнь', 'Июня' ],
+            6: [ 'Июль', 'Июля' ],
+            7: [ 'Август', 'Августа' ],
+            8: [ 'Сентябрь', 'Сентября' ],
+            9: [ 'Октябрь', 'Октября' ],
+            10: [ 'Ноябрь', 'Ноября' ],
+            11: [ 'Декабрь', 'Декабря' ],
         };
         
-        return map[monthNumber];
+        return map[ monthNumber ];
     }
-
-    handleChange() {
-    }
+    
 }
+
+const props = ({ timetable }) => {
+    return {
+        timetable: timetable.timetable,
+        loading: timetable.timetableLoading,
+        loadError: timetable.timetableLoadError,
+    };
+};
+
+const actions = {
+    getTimeTable: loadTimetableAction,
+};
+
+export default connect(props, actions)(TimeTable);
+
 
 
 

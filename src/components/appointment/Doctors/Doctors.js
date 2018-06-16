@@ -2,22 +2,28 @@ import React, {Fragment} from 'react';
 import './doctors.css';
 import Doctor from "./Doctor/Doctor";
 import {PageHeader} from "react-bootstrap";
+import { loadDoctorsBySpecAction } from '../../../actions/doctor';
+import { connect } from 'react-redux';
 
-const doctors = [
-    {
-        id: '37a4cbf6-61c7-4ee8-96dd-6c43b8141753',
-        name: 'Позднякова Нина Васильевна',
-    },
-    {
-        id: '9f28f12f-31d7-485a-9289-8c3c2fb44eb2',
-        name: 'Давыдова Зинаида Николаевна',
-    },
-];
+import type { DoctorType } from '../../../models/Doctor';
 
-export default class Doctors extends React.Component {
+type Props = {
+    doctors: DoctorType[],
+    loading: boolean,
+    loadError: ?Error,
+    getDoctors: (specId: string) => void,
+}
 
+class Doctors extends React.Component<Props, *> {
+    
+    componentDidMount() {
+        const { specializationId, getDoctors } = this.props;
+        
+        getDoctors(specializationId);
+    }
+    
     render() {
-        const { specializationId } = this.props;
+        const { specializationId, doctors } = this.props;
 
         return (
             <Fragment>
@@ -29,7 +35,7 @@ export default class Doctors extends React.Component {
                     { doctors.map(doctor =>
                         <Doctor
                             specializationId={ specializationId }
-                            key={ doctor.id }
+                            key={ doctor.personalNumber }
                             doctor={ doctor }
                         />
                     ) }
@@ -38,3 +44,17 @@ export default class Doctors extends React.Component {
         );
     }
 }
+
+const props = ({ doctor }) => {
+    return {
+        doctors: doctor.doctorsBySpec,
+        loading: doctor.doctorsBySpecLoading,
+        loadError: doctor.doctorsBySpecLoadError,
+    };
+};
+
+const actions = {
+    getDoctors: loadDoctorsBySpecAction,
+};
+
+export default connect(props, actions)(Doctors);

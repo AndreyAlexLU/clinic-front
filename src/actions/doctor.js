@@ -49,11 +49,11 @@ const loadDoctorsBySpecFail = createAction(LOAD_DOCTORS_BY_SPEC + FAIL);
 export const loadDoctorsBySpecAction = (spec: string) => {
     return async (dispatch: Dispatch) => {
         try {
-            dispatch(loadDoctorsStart());
+            dispatch(loadDoctorsBySpecStart());
             const response = await DoctorsApi.getBySpec(spec);
-            dispatch(loadDoctorsSuccess(response.data));
+            dispatch(loadDoctorsBySpecSuccess(response.data));
         } catch (err) {
-            dispatch(loadDoctorsFail(err));
+            dispatch(loadDoctorsBySpecFail(err));
         }
     };
 };
