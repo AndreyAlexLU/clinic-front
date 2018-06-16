@@ -2,15 +2,15 @@ import React from 'react';
 import './header.css';
 import {HeaderLogo} from "./HeaderLogo/HeaderLogo";
 import RightMenu from './RightMenu/RightMenu';
-import {  } from 'react-bootstrap';
+import type { User } from '../../models/User';
 
-export default class Header extends React.Component {
+type Props = {
+    user: User,
+}
+
+export default class Header extends React.Component<Props, *> {
     render() {
-        const testUser = {
-            lastName: 'Юшкин',
-            firstName: 'Андрей',
-            middleName: 'Владимирович',
-        };
+        const { user } = this.props;
         
         return (
             <header className='header'>
@@ -21,7 +21,7 @@ export default class Header extends React.Component {
                     />
     
                     <RightMenu
-                        user={ testUser }
+                        user={ user }
                     />
                 </div>
                 
