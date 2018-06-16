@@ -7,7 +7,7 @@ import timetable from '../../../reducers/timetable';
 import type { TimeTableUnit } from '../../../models/TimeTable';
 
 type Props = {
-    timetable: TimeTableUnit[],
+    timetable: TimeTableUnit[][],
     loading: boolean,
     loadError: ?Error,
     
@@ -27,9 +27,9 @@ class TimeTable extends React.Component<Props, *> {
         if (timetable && timetable.length > 0) {
             return (
                 <div className='timetable'>
-                    { [ ...Array(5).keys() ].map(i => (
+                    { timetable.map(timetableWeek => (
                         <div className='timetable-row'>
-                            { [ ...Array(7).keys() ].map(j => this.renderCell(i, j)) }
+                            { timetableWeek.map(timetableUnit => this.renderCell(timetableUnit)) }
                         </div>
                     )) }
                 </div>
@@ -41,9 +41,7 @@ class TimeTable extends React.Component<Props, *> {
         return null;
     }
     
-    renderCell(i, j) {
-        const { timetable } = this.props;
-        const timetableUnit: TimeTableUnit = timetable[ 7 * i + j ][ 0 ];
+    renderCell(timetableUnit: TimeTableUnit) {
         const date: Date = new Date(timetableUnit.date);
         
         return (
@@ -53,6 +51,9 @@ class TimeTable extends React.Component<Props, *> {
                 </div>
                 <div>
                     { this.getMonthByNumber(date.getMonth())[ 1 ] }
+                </div>
+                <div>
+                    Талонов { timetableUnit.count }
                 </div>
             </div>
         )

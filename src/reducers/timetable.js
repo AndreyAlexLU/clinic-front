@@ -20,17 +20,19 @@ const initialState = {
 
 export default handleActions({
     [ LOAD_TIMETABLE + START ]: (state, { payload }) => {
-        return {
+            return {
             ...state,
             timetableLoading: true,
             timetableLoadError: null,
         }
     },
     [ LOAD_TIMETABLE + SUCCESS ]: (state, { payload }) => {
+        const timetable: TimeTableUnit[][] = transformTimeTable(payload);
+        
         return {
             ...state,
             timetableLoading: false,
-            timetable: payload,
+            timetable,
         }
     },
     [ LOAD_TIMETABLE + FAIL ]: (state, { payload }) => {
@@ -41,3 +43,21 @@ export default handleActions({
         }
     },
 }, initialState);
+
+function transformTimeTable(timetable: TimeTableUnit[][]) {
+    return timetable.reduce((result: TimeTableUnit[][], current: TimeTableUnit[]) => {
+        const index: number = result.length - 1;
+        const currentTimeTableUnit = current[0];
+        const date: Date = new Date(currentTimeTableUnit.date);
+        const dayNum: number = date.getDay();
+        
+        result[index].push(currentTimeTableUnit);
+        if (dayNum === 0) {
+            result.push([]);
+        }
+        
+        return result;
+    }, [
+        [],
+    ])
+}
