@@ -1,18 +1,24 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './userForm.css';
 import type { User } from '../../models/User';
 import { Button, DatePicker, Input, RadioGroup, Select, Textarea } from 'retail-ui/components/all';
 import { RolesEnum } from '../../constants/roles';
 import DateInput from 'retail-ui/components/DateInput/DateInput';
+import type { DoctorType } from '../../models/Doctor';
 
 type Props = {|
     user?: ?User,
+    specializations: Object[],
+    
+    getSpecs: () => void,
     onSubmit: (userData: User) => void,
+    onSaveDoctor?: (doctor: DoctorType) => void,
 |};
 
 type State = {
     user: User,
+    doctor: DoctorType,
 }
 
 export default class UserForm extends Component<Props, State> {
@@ -25,12 +31,19 @@ export default class UserForm extends Component<Props, State> {
                 sex: '0',
                 ...user
             },
+            doctor: {
+            
+            }
         }
     }
     
     static defaultProps = {
         user: {},
     };
+    
+    componentDidMount() {
+        this.props.getSpecs();
+    }
     
     render() {
         const roleItems = [
@@ -39,6 +52,10 @@ export default class UserForm extends Component<Props, State> {
             [ RolesEnum.ADMINISTRATION, 'Администрация клиники' ],
             [ RolesEnum.SYS_ADMIN, 'Системный администратор' ],
         ];
+        
+        const specsItems = this.props.specializations.map(spec => {
+            return [ spec.id, spec.name ];
+        });
         
         return (
             <div className='user-form'>
@@ -103,6 +120,55 @@ export default class UserForm extends Component<Props, State> {
                         onChange={ (_, val) => this.onChangeField('middleName', val) }
                     />
                 </div>
+                
+                { this.state.user.roleId === RolesEnum.DOCTOR && (
+                    <Fragment>
+                        <div className='user-form-row'>
+                            <div className='user-form-label'>
+                                Роль
+                            </div>
+                            <Select
+                                items={ specsItems }
+                                value={ this.state.doctor.specializationId }
+                                onChange={ (_, value) => this.onChangeDoctor('specializationId', value) }
+                            />
+                        </div>
+    
+                        <div className='user-form-row'>
+                            <div className='user-form-label'>
+                                Образование
+                            </div>
+                            <Textarea
+                                width={ 400 }
+                                rows={ 2 }
+                                value={ this.state.doctor.education }
+                                onChange={ (_, val) => this.onChangeDoctor('education', val) }
+                            />
+                        </div>
+    
+                        <div className='user-form-row'>
+                            <div className='user-form-label'>
+                                Опыт
+                            </div>
+                            <Input
+                                width={ 150 }
+                                value={ this.state.doctor.experience }
+                                onChange={ (_, val) => this.onChangeDoctor('experience', val) }
+                            />
+                        </div>
+    
+                        <div className='user-form-row'>
+                            <div className='user-form-label'>
+                                Статус
+                            </div>
+                            <Input
+                                width={ 150 }
+                                value={ this.state.doctor.status }
+                                onChange={ (_, val) => this.onChangeDoctor('status', val) }
+                            />
+                        </div>
+                    </Fragment>
+                )}
                 
                 <div className='user-form-row'>
                     <div className='user-form-label'>
@@ -222,6 +288,15 @@ export default class UserForm extends Component<Props, State> {
     
     onSubmit = () => {
         const { user } = this.state;
+        
+        if (user.roleId === RolesEnum.DOCTOR) {
+            const { doctor } = this.state;
+            const { onSaveDoctor } = this.props;
+            
+            doctor.userLogin = user.login;
+            onSaveDoctor(doctor);
+        }
+        
         this.props.onSubmit(user);
     };
     
@@ -229,6 +304,15 @@ export default class UserForm extends Component<Props, State> {
         this.setState({
             user: {
                 ...this.state.user,
+                [ name ]: val,
+            }
+        })
+    }
+    
+    onChangeDoctor = (name, val) => {
+        this.setState({
+            doctor: {
+                ...this.state.doctor,
                 [ name ]: val,
             }
         })

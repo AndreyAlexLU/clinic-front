@@ -7,6 +7,7 @@ export const FAIL = '_FAIL';
 export const LOAD_DOCTORS = 'LOAD_DOCTORS';
 export const LOAD_DOCTORS_BY_SPEC = 'LOAD_DOCTORS_BY_SPEC';
 export const GET_SPECIALIZATIONS = 'GET_SPECIALIZATIONS';
+export const SAVE_DOCTOR = 'SAVE_DOCTOR';
 
 // timetable
 export const LOAD_TIMETABLE = 'LOAD_TIMETABLE';

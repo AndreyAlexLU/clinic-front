@@ -1,5 +1,5 @@
 import { axiosInstance } from '../axiosInstance';
-import { getCookie } from '../utils/getCookie';
+import type { DoctorType } from '../models/Doctor';
 
 const prefix = '/doctor';
 
@@ -14,5 +14,9 @@ export const DoctorsApi = {
     
     getBySpec(spec) {
         return axiosInstance.get(`${prefix}/getBySpec/${spec}`);
+    },
+    
+    saveDoctor(doctor: DoctorType) {
+        return axiosInstance.post(`${prefix}/save`, doctor);
     }
 };

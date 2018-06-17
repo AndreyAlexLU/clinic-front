@@ -6,7 +6,7 @@ import {
     GET_SPECIALIZATIONS,
     START,
     SUCCESS,
-    FAIL,
+    FAIL, SAVE_DOCTOR,
 } from '../constants/actions';
 import { handleActions } from 'redux-actions';
 import type { DoctorType } from '../models/Doctor';
@@ -22,6 +22,8 @@ const initialState = {
     doctorsBySpecLoadError: null,
     specializationsLoading: false,
     specializationsLoadError: null,
+    doctorSaving: false,
+    doctorSaveError: null
 };
 
 export default handleActions({
@@ -86,6 +88,26 @@ export default handleActions({
             ...state,
             specializationsLoading: false,
             specializationsLoadError: payload,
+        }
+    },
+    [ SAVE_DOCTOR + START ]: (state, { payload }) => {
+        return {
+            ...state,
+            doctorSaving: true,
+            doctorSaveError: null,
+        }
+    },
+    [ SAVE_DOCTOR + SUCCESS ]: (state, { payload }) => {
+        return {
+            ...state,
+            doctorSaving: false,
+        }
+    },
+    [ SAVE_DOCTOR + FAIL ]: (state, { payload }) => {
+        return {
+            ...state,
+            doctorSaving: false,
+            doctorSaveError: payload,
         }
     },
 }, initialState);
