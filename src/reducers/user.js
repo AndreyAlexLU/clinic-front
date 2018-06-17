@@ -12,6 +12,7 @@ import { handleActions } from 'redux-actions';
 
 const initialState = {
     user: {},
+    createdUser: {},
     token: null,
 };
 
@@ -24,8 +25,7 @@ export default handleActions({
     [ CREATE_USER + SUCCESS ]: (state, { payload }) => {
         return {
             ...state,
-            user: payload.user,
-            token: payload.token,
+            createdUser: payload,
         }
     },
     [ CREATE_USER + FAIL ]: (state, { payload }) => {

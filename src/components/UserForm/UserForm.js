@@ -2,13 +2,13 @@
 import React, { Component } from 'react';
 import './userForm.css';
 import type { User } from '../../models/User';
-import { DatePicker, Input, RadioGroup, Select, Textarea } from 'retail-ui/components/all';
+import { Button, DatePicker, Input, RadioGroup, Select, Textarea } from 'retail-ui/components/all';
 import { RolesEnum } from '../../constants/roles';
 import DateInput from 'retail-ui/components/DateInput/DateInput';
 
 type Props = {|
     user?: ?User,
-    edit: boolean,
+    onSubmit: (userData: User) => void,
 |};
 
 type State = {
@@ -18,14 +18,16 @@ type State = {
 export default class UserForm extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        const {
-            edit, user
-        } = props;
+        const { user } = props;
         
         this.state = {
-            user: edit ? { ...user } : {},
+            user: { ...user },
         }
     }
+    
+    static defaultProps = {
+        user: {},
+    };
     
     render() {
         const roleItems = [
@@ -112,76 +114,82 @@ export default class UserForm extends Component<Props, State> {
                         enableTodayLink
                     />
                 </div>
-    
-    
+                
+                
                 <div className='user-form-row'>
                     <div className='user-form-label'>
                         Пол
                     </div>
                     <RadioGroup
                         inline
-                        items={[
-                            ['0', 'Мужской'],
-                            ['1', 'Женский']
-                        ]}
+                        items={ [
+                            [ '0', 'Мужской' ],
+                            [ '1', 'Женский' ]
+                        ] }
                         defaultValue='0'
                         value={ this.state.user.sex }
                         onChange={ (_, val) => this.onChangeField('sex', val) }
                     />
                 </div>
-    
+                
                 <div className='user-form-row'>
                     <div className='user-form-label'>
                         Серия паспорта
                     </div>
                     <Input
-                        mask='\9999'
+                        width={ 70 }
+                        mask='9999'
                         value={ this.state.user.passportSeries }
                         onChange={ (_, val) => this.onChangeField('passportSeries', val) }
                     />
                 </div>
-    
+                
                 <div className='user-form-row'>
                     <div className='user-form-label'>
                         Номер паспорта
                     </div>
                     <Input
-                        mask='\999999'
+                        width={ 100 }
+                        mask='999999'
                         value={ this.state.user.passportNumber }
                         onChange={ (_, val) => this.onChangeField('passportNumber', val) }
                     />
                 </div>
-    
+                
                 <div className='user-form-row'>
                     <div className='user-form-label'>
                         Дата выдачи паспорта
                     </div>
                     <DateInput
+                        width={ 100 }
                         value={ this.state.user.passportIssueDate }
                         onChange={ (_, val) => this.onChangeField('passportIssueDate', val) }
                     />
                 </div>
-    
+                
                 <div className='user-form-row'>
                     <div className='user-form-label'>
                         Орган выдачи паспорта
                     </div>
                     <Textarea
+                        width={ 400 }
+                        rows={ 2 }
                         value={ this.state.user.passportAuthority }
                         onChange={ (_, val) => this.onChangeField('passportAuthority', val) }
                     />
                 </div>
-    
+                
                 <div className='user-form-row'>
                     <div className='user-form-label'>
                         Адрес
                     </div>
                     <Textarea
+                        width={ 400 }
                         value={ this.state.user.address }
                         onChange={ (_, val) => this.onChangeField('address', val) }
                     />
                 </div>
-    
+                
                 <div className='user-form-row'>
                     <div className='user-form-label'>
                         Номер телефона
@@ -191,7 +199,7 @@ export default class UserForm extends Component<Props, State> {
                         onChange={ (_, val) => this.onChangeField('telephoneNumber', val) }
                     />
                 </div>
-    
+                
                 <div className='user-form-row'>
                     <div className='user-form-label'>
                         Email
@@ -201,10 +209,21 @@ export default class UserForm extends Component<Props, State> {
                         onChange={ (_, val) => this.onChangeField('email', val) }
                     />
                 </div>
+                
+                <div className='user-form-submit'>
+                    <Button use='primary' type='submit' onClick={ this.onSubmit }>
+                        Сохранить
+                    </Button>
+                </div>
             
             </div>
         );
     }
+    
+    onSubmit = () => {
+        const { user } = this.state;
+        this.props.onSubmit(user);
+    };
     
     onChangeField = (name, val) => {
         this.setState({

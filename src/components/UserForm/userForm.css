@@ -1,5 +1,5 @@
 .user-form {
-    padding: 20px;
+    padding: 20px 35px;
 }
 
 .user-form-row {
@@ -8,5 +8,5 @@
 
 .user-form-label {
     display: inline-block;
-    width: 100px;
+    width: 200px;
 }
