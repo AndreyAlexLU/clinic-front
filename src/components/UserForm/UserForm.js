@@ -21,7 +21,10 @@ export default class UserForm extends Component<Props, State> {
         const { user } = props;
         
         this.state = {
-            user: { ...user },
+            user: {
+                sex: '0',
+                ...user
+            },
         }
     }
     
@@ -76,7 +79,6 @@ export default class UserForm extends Component<Props, State> {
                         Имя
                     </div>
                     <Input
-                        type='password'
                         value={ this.state.user.firstName }
                         onChange={ (_, val) => this.onChangeField('firstName', val) }
                     />
@@ -87,7 +89,6 @@ export default class UserForm extends Component<Props, State> {
                         Фамилия
                     </div>
                     <Input
-                        type='password'
                         value={ this.state.user.lastName }
                         onChange={ (_, val) => this.onChangeField('lastName', val) }
                     />
@@ -98,7 +99,6 @@ export default class UserForm extends Component<Props, State> {
                         Отчество
                     </div>
                     <Input
-                        type='password'
                         value={ this.state.user.middleName }
                         onChange={ (_, val) => this.onChangeField('middleName', val) }
                     />

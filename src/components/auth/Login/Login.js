@@ -5,6 +5,7 @@ import { loginUserAction } from '../../../actions/user';
 import type { User } from '../../../models/User';
 import { Button, Gapped, Input } from 'retail-ui/components/all';
 import './login.css';
+import { withRouter } from 'react-router-dom';
 
 type Props = {|
     user: User,
@@ -77,6 +78,7 @@ class Login extends Component<Props, State> {
             login,
             password,
         });
+        this.props.history.push('/');
     }
     
 }
@@ -93,4 +95,4 @@ const actions = {
     loginUser: loginUserAction,
 };
 
-export default connect(props, actions)(Login);
+export default withRouter(connect(props, actions)(Login));

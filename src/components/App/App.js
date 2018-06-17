@@ -7,13 +7,14 @@ import Footer from '../Footer/Footer';
 import { connect } from 'react-redux';
 import type { User } from '../../models/User';
 import Login from '../auth/Login/Login';
-import { getUserAction } from '../../actions/user';
+import { getUserAction, logoutUserAction } from '../../actions/user';
 
 type Props = {
     user: User,
     token: string,
     
     getUser: (login) => void,
+    logout: () => void,
 }
 
 class App extends React.Component<Props, *> {
@@ -24,12 +25,12 @@ class App extends React.Component<Props, *> {
     }
     
     render() {
-        const { user, token } = this.props;
+        const { user, token, logout } = this.props;
         
         return (
             <Router>
                 <div className="app-wrapper">
-                    <Header user={ user }/>
+                    <Header user={ user } logout={ logout }/>
                     { token && user && (
                         <Content user={ user }/>
                     )}
@@ -52,6 +53,7 @@ const props = ({ user }) => {
 
 const actions = {
     getUser: getUserAction,
+    logout: logoutUserAction,
 };
 
 export default connect(props, actions)(App);

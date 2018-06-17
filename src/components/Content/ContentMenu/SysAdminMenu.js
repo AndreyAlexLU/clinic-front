@@ -12,6 +12,13 @@ export default class SysAdminMenu extends Component<Props, *> {
                     <NavLink
                         className='content-menu-item'
                         activeClassName='content-menu-item-active'
+                        to='/sysadmin/employees'
+                    >
+                        Список сотрудников
+                    </NavLink>
+                    <NavLink
+                        className='content-menu-item'
+                        activeClassName='content-menu-item-active'
                         to='/sysadmin/add'
                     >
                         Добавление сотрудника

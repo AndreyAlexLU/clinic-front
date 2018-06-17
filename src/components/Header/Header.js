@@ -6,11 +6,12 @@ import type { User } from '../../models/User';
 
 type Props = {
     user: User,
+    logout: () => void,
 }
 
 export default class Header extends React.Component<Props, *> {
     render() {
-        const { user } = this.props;
+        const { user, logout } = this.props;
         
         return (
             <header className='header'>
@@ -22,6 +23,7 @@ export default class Header extends React.Component<Props, *> {
     
                     <RightMenu
                         user={ user }
+                        logout={ logout }
                     />
                 </div>
                 

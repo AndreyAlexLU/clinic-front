@@ -1,10 +1,11 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 import './content.css';
 import ContentMenu from "./ContentMenu/ContentMenu";
 import Appointment from "../appointment/Appointment/Appointment";
 import type { User } from '../../models/User';
 import AddEmployee from '../sysadmin/AddEmployee/AddEmployee';
+import EmployeeList from '../sysadmin/EmployeeList/EmployeeList';
 
 type Props = {
     user: User,
@@ -19,6 +20,8 @@ export class Content extends React.Component<Props, *> {
                 <ContentMenu user={ user } />
                 <Route path='/patient/appointment' component={ Appointment }/>
                 <Route path='/sysadmin/add' component={ AddEmployee }/>
+                <Route path='/sysadmin/employees/' render={ () => <Redirect to='/sysadmin/employees/1'/> }/>
+                <Route path='/sysadmin/employees/:roleId' component={ EmployeeList }/>
             </div>
         )
     }

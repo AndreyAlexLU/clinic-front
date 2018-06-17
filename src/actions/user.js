@@ -2,8 +2,10 @@ import { createAction } from 'redux-actions';
 
 import {
     LOGIN_USER,
+    LOGOUT_USER,
     CREATE_USER,
     GET_USER,
+    GET_USERS_BY_ROLE,
     START,
     FAIL,
     SUCCESS,
@@ -20,7 +22,7 @@ export const createUserAction = (userData: User) => {
         try {
             dispatch(createUserStart());
             const response = await UserApi.create(userData);
-            dispatch(createUserSuccess(response.data));
+            dispatch(createUserSuccess(userData.roleId));
         } catch (err) {
             dispatch(createUserFail(err));
         }
@@ -58,4 +60,29 @@ export const getUserAction = (login) => {
         }
     };
 };
+
+const getUsersByRoleStart = createAction(GET_USERS_BY_ROLE + START);
+const getUsersByRoleSuccess = createAction(GET_USERS_BY_ROLE + SUCCESS);
+const getUsersByRoleFail = createAction(GET_USERS_BY_ROLE + FAIL);
+
+export const getUsersByRoleAction = (roleId) => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(getUsersByRoleStart());
+            const response = await UserApi.getByRole(roleId);
+            dispatch(getUsersByRoleSuccess(response.data));
+        } catch (err) {
+            dispatch(getUsersByRoleFail(err));
+        }
+    };
+};
+
+export const logoutUserAction = (roleId) => {
+    return async (dispatch: Dispatch) => {
+        const logoutUser = createAction(LOGOUT_USER);
+        dispatch(logoutUser());
+    };
+};
+
+
 

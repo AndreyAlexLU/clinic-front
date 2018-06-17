@@ -8,12 +8,13 @@ import { getFullName } from '../../../utils/getFullName';
 
 type Props = {|
     user: User;
+    logout: () => void,
 |};
 
 export default class RightMenu extends Component<Props, *> {
     
     render() {
-        const { user } = this.props;
+        const { user, logout } = this.props;
         
         if (user && user.login) {
             return (
@@ -27,7 +28,7 @@ export default class RightMenu extends Component<Props, *> {
         
                     <Gapped gap={5}>
                         <Button use="default">Профиль</Button>
-                        <Button use="default">Выйти</Button>
+                        <Button use="default" onClick={ logout }>Выйти</Button>
                     </Gapped>
                 </div>
             );

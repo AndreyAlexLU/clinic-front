@@ -13,5 +13,9 @@ export const UserApi = {
     
     get(login) {
         return axiosInstance.get(`${prefix}/get/${login}`);
+    },
+    
+    getByRole(roleId) {
+        return axiosInstance.get(`${prefix}/getByRole/${roleId}`);
     }
 };
