@@ -3,6 +3,7 @@ import { createAction } from 'redux-actions';
 import {
     LOGIN_USER,
     CREATE_USER,
+    CHECK_TOKEN,
     START,
     FAIL,
     SUCCESS,
@@ -41,4 +42,3 @@ export const loginUserAction = (userData) => {
         }
     };
 };
-

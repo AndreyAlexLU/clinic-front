@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loginUserAction } from '../../../actions/user';
 import type { User } from '../../../models/User';
-import { Button, Input } from 'retail-ui/components/all';
+import { Button, Gapped, Input } from 'retail-ui/components/all';
+import './login.css';
 
 type Props = {|
     user: User,
@@ -27,11 +28,32 @@ class Login extends Component<Props, State> {
         const { login, password } = this.state;
         
         return (
-            <form>
-                <Input value={ login } onChange={ this.onChangeLogin }/>
-                <Input value={ password } type='password' onChange={ this.onChangePassword }/>
-                <Button type='submit' use='primary' onClick={ this.loginUser }/>
-            </form>
+            <div className='login-wrapper'>
+                <form>
+                    <Gapped gap={ 10 } vertical>
+                        <div className='login-row'>
+                            <div className='login-label'>
+                                Логин
+                            </div>
+                            <Input value={ login } onChange={ this.onChangeLogin }/>
+                        </div>
+                        
+                        <div className='login-row'>
+                            <div className='login-label'>
+                                Пароль
+                            </div>
+                            <Input value={ password } type='password' onChange={ this.onChangePassword }/>
+                        </div>
+                        
+                        <div className='login-submit'>
+                            <Button type='submit' use='primary' onClick={ this.loginUser } width={ 100 }>
+                                Войти
+                            </Button>
+                        </div>
+                        
+                    </Gapped>
+                </form>
+            </div>
         );
     }
     

@@ -15,3 +15,4 @@ export const LOAD_TIMETABLE_UNITS = 'LOAD_TIMETABLE_UNITS';
 // user
 export const CREATE_USER = 'CREATE_USER';
 export const LOGIN_USER = 'LOGIN_USER';
+export const CHECK_TOKEN = 'CHECK_TOKEN';

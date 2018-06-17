@@ -1,4 +1,5 @@
 import { axiosInstance } from '../axiosInstance';
+import { getCookie } from '../utils/getCookie';
 
 const prefix = '/doctor';
 

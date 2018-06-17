@@ -6,6 +6,7 @@ import {Content} from "../Content/Content";
 import Footer from '../Footer/Footer';
 import { connect } from 'react-redux';
 import type { User } from '../../models/User';
+import Login from '../auth/Login/Login';
 
 type Props = {
     user: User,
@@ -13,21 +14,29 @@ type Props = {
 }
 
 class App extends React.Component<Props, *> {
+    componentDidMount() {
+    
+    }
+    
     render() {
-        const { user } = this.props;
+        const { user, token } = this.props;
         
         return (
             <Router>
                 <div className="app-wrapper">
                     <Header user={ user }/>
-                    <Content/>
+                    { token && (
+                        <Content/>
+                    )}
+                    { !token && (
+                        <Login/>
+                    )}
                     <Footer />
                 </div>
             </Router>
         );
     }
 }
-
 
 const props = ({ user }) => {
     return {
