@@ -20,7 +20,7 @@ export default class Doctor extends React.Component<Props, *> {
                     className='doctor-container'
                 >
                     <span className='doctor-name'>
-                        { getFullName(doctor.firstName, doctor.lastName, doctor.middleName) }
+                        { getFullName(doctor) }
                     </span>
                 </NavLink>
             </div>

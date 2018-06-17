@@ -9,5 +9,9 @@ export const UserApi = {
     
     login(userData) {
         return axiosInstance.post(`${prefix}/login/`, userData)
+    },
+    
+    get(login) {
+        return axiosInstance.get(`${prefix}/get/${login}`);
     }
 };

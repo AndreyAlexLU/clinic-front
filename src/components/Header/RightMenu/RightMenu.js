@@ -4,6 +4,7 @@ import type { User } from '../../../models/User';
 import './rightMenu.css';
 import { Gapped, Button, Icon20 } from 'retail-ui/components/all';
 import { Link } from 'react-router-dom';
+import { getFullName } from '../../../utils/getFullName';
 
 type Props = {|
     user: User;
@@ -21,7 +22,7 @@ export default class RightMenu extends Component<Props, *> {
                         <span className='right-menu-user-icon'>
                             <Icon20 name="user" />
                         </span>
-                        { user.login }
+                        { user.firstName ? getFullName(user) : user.login }
                     </span>
         
                     <Gapped gap={5}>

@@ -3,7 +3,7 @@ import { createAction } from 'redux-actions';
 import {
     LOGIN_USER,
     CREATE_USER,
-    CHECK_TOKEN,
+    GET_USER,
     START,
     FAIL,
     SUCCESS,
@@ -42,3 +42,20 @@ export const loginUserAction = (userData) => {
         }
     };
 };
+
+const getUserStart = createAction(GET_USER + START);
+const getUserSuccess = createAction(GET_USER + SUCCESS);
+const getUserFail = createAction(GET_USER + FAIL);
+
+export const getUserAction = (login) => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(getUserStart());
+            const response = await UserApi.get(login);
+            dispatch(getUserSuccess(response.data));
+        } catch (err) {
+            dispatch(getUserFail(err));
+        }
+    };
+};
+
