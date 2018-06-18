@@ -1,0 +1,12 @@
+.schedule {
+    padding: 25px 35px;
+}
+
+.schedule-row {
+    margin-bottom: 15px;
+}
+
+.schedule-row-label {
+    display: inline-block;
+    width: 150px;
+}
