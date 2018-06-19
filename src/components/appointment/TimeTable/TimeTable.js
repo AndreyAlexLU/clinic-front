@@ -19,15 +19,17 @@ type Props = {
     timetableLoadError: ?Error,
     timetableUnitsLoadError: ?Error,
     
-    getTimeTable: (date: string) => void,
-    getTimeTableUnits: (date: string) => void,
+    getTimeTable: (date: string, doctorNumber: number) => void,
+    getTimeTableUnits: (date: string, doctorNumber: number) => void,
 };
 
 class TimeTable extends React.Component<Props, *> {
     
     componentDidMount() {
+        const { doctorId } = this.props;
         const currentDate: Date = new Date();
-        this.props.getTimeTable(currentDate.toISOString());
+        
+        this.props.getTimeTable(currentDate.toISOString(), doctorId);
     }
     
     render() {
@@ -62,7 +64,7 @@ class TimeTable extends React.Component<Props, *> {
                             ({ match }) => <TimeTableUnits
                                 date={ match.params.date }
                                 units={ timetableUnits }
-                                getUnits={ getTimeTableUnits }
+                                getUnits={ (date) => getTimeTableUnits(date, doctorId) }
                                 loading={ timetableUnitsLoading }
                                 loadError={ timetableUnitsLoadError }
                             />
@@ -96,7 +98,8 @@ class TimeTable extends React.Component<Props, *> {
         const date: Date = new Date(timetableUnit.date);
         const classes = cn({
             'timetable-cell': true,
-            'timetable-cell-empty': timetableUnit.count === 0,
+            'timetable-cell-empty': !timetableUnit.dayOff && timetableUnit.count === 0,
+            'timetable-cell-dayoff': timetableUnit.dayOff,
         });
         
         return (
@@ -111,7 +114,8 @@ class TimeTable extends React.Component<Props, *> {
                     { this.getMonthByNumber(date.getMonth())[ 1 ] }
                 </div>
                 <div>
-                    { timetableUnit.count === 0 && 'Нет талонов' }
+                    { timetableUnit.dayOff && 'Нет записи' }
+                    { !timetableUnit.dayOff && timetableUnit.count === 0 && 'Нет талонов' }
                     { timetableUnit.count > 0 && `${ timetableUnit.count } талонов` }
                 </div>
             </NavLink>

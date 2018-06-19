@@ -41,6 +41,10 @@
 }
 
 .timetable-cell-empty {
+    background-color: #fffbd4;
+}
+
+.timetable-cell-dayoff {
     background-color: #ffc8c8;
     pointer-events: none;
 }

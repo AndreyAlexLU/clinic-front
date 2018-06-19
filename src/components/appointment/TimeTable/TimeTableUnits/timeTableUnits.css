@@ -18,4 +18,5 @@
 
 .timetable-unit-busy {
     background-color: rgba(199, 15, 3, 0.13);
+    pointer-events: none;
 }

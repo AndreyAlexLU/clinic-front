@@ -70,11 +70,10 @@ export default handleActions({
 function transformTimeTable(timetable: TimeTableItem[][]) {
     return timetable.reduce((result: TimeTableItem[][], current: TimeTableItem[]) => {
         const index: number = result.length - 1;
-        const currentTimeTableUnit = current[0];
-        const date: Date = new Date(currentTimeTableUnit.date);
+        const date: Date = new Date(current.date);
         const dayNum: number = date.getDay();
         
-        result[index].push(currentTimeTableUnit);
+        result[index].push(current);
         if (dayNum === 0) {
             result.push([]);
         }

@@ -3,11 +3,17 @@ import { axiosInstance } from '../axiosInstance';
 const prefix = '/timetable';
 
 export const TimetableApi = {
-    getUnits(date) {
-        return axiosInstance.get(`${prefix}/getUnits/${date}`)
+    getUnits(date, doctorNumber) {
+        return axiosInstance.post(`${prefix}/getUnits`, {
+            date,
+            doctorNumber,
+        })
     },
     
-    getTable(date) {
-        return axiosInstance.get(`${prefix}/getTable/${date}`)
+    getTable(date, doctorNumber) {
+        return axiosInstance.post(`${prefix}/getTable`, {
+            date,
+            doctorNumber,
+        })
     }
 };
