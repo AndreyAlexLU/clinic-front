@@ -10,3 +10,17 @@
     display: inline-block;
     width: 150px;
 }
+
+.schedule-table {
+    padding: 20px 10px;
+    border: 1px solid black;
+}
+
+.schedule-table-row {
+    margin-bottom: 8px;
+}
+
+.schedule-table-label {
+    display: inline-block;
+    width: 150px;
+}
