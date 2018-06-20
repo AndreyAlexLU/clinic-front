@@ -1,28 +1,70 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import './schedule.css';
-import { Checkbox, Gapped, Input, RadioGroup } from 'retail-ui/components/all';
+import { Button, Checkbox, Gapped, Input, RadioGroup } from 'retail-ui/components/all';
+import { loadTimetableAction, loadTimetableUnitsAction } from '../../../actions/timetable';
+import withRouter from 'react-router-dom/es/withRouter';
+import { connect } from 'react-redux';
+import type { ScheduleType } from '../../../models/Schedule';
+import { loadDoctorAction, updateScheduleAction } from '../../../actions/doctor';
+import type { DoctorType } from '../../../models/Doctor';
+import type { User } from '../../../models/User';
 
-type Props = {||};
-
-type WeekInterval = {|
-    startTime: string,
-    endTime: string,
+type Props = {|
+    user: User,
+    doctor: DoctorType,
+    schedule: ScheduleType,
+    doctorLoading: boolean,
+    doctorLoadError: ?Error,
+    scheduleUpdating: boolean,
+    scheduleUpdateError: ?Error,
+    
+    updateSchedule: (schedule: ScheduleType) => void,
+    loadDoctor: (login: string) => void,
 |};
 
 type State = {|
-    isMonthPeriod: boolean,
-    step: number,
-    weekIntervals: { [ string ]: WeekInterval },
+    schedule: ScheduleType
 |};
 
-export default class Schedule extends Component<Props, State> {
-    state = {
-        step: 15,
-        weekIntervals: {},
-    };
-
+class Schedule extends Component<Props, State> {
+    constructor(props: Props) {
+        super(props);
+        
+        this.state = {
+            schedule: {
+                ...props.schedule,
+                doctorNumber: 1,
+            },
+        };
+    }
+    
+    componentDidMount() {
+        const { user, loadDoctor } = this.props;
+        if (user.login && user.login !== 'undefined') {
+            loadDoctor(user.login);
+        }
+    }
+    
+    componentDidUpdate(prevProps: Props) {
+        const { doctorLoading, doctorLoadError, doctor } = this.props;
+        
+        if (!doctorLoading && prevProps.doctorLoading) {
+            if (!doctorLoadError) {
+                this.setState({
+                    schedule: {
+                        ...this.state.schedule,
+                        doctorNumber: doctor.personalNumber
+                    }
+                })
+            }
+        }
+    }
+    
     render() {
+        const { updateSchedule } = this.props;
+        const { schedule } = this.state;
+        
         const weeks = [
             {
                 dayNumber: 1,
@@ -53,94 +95,139 @@ export default class Schedule extends Component<Props, State> {
                 dayName: 'Воскресенье',
             },
         ];
-
+        
         return (
             <div className='schedule'>
-                <div className="schedule-row">
-                    <div className="schedule-row-label">
+                <div className='schedule-row'>
+                    <div className='schedule-row-label'>
                         Время приема
                     </div>
-                    <Gapped gap={10}>
+                    <Gapped gap={ 10 }>
                         <Input
-                            value={this.state.step}
-                            onChange={this.onChangeStep}
-                            width={120}
+                            value={ this.state.step }
+                            onChange={ this.onChangeStep }
+                            width={ 120 }
                         />
-
+                        
                         минут
                     </Gapped>
                 </div>
-
-                <div className="schedule-table">
-                    {weeks.map(({ dayNumber, dayName }) => (
-                        <div className="schedule-table-row">
-                            <Gapped gap={10}>
-                                <div className="schedule-table-label">
-                                    {dayName}
+                
+                <div className='schedule-table'>
+                    { weeks.map(({ dayNumber, dayName }) => (
+                        <div className='schedule-table-row'>
+                            <Gapped gap={ 10 }>
+                                <div className='schedule-table-label'>
+                                    { dayName }
                                 </div>
                                 <Checkbox
-                                    checked={this.state.weekIntervals[ dayNumber ]}
-                                    onChange={checked => this.onChangeWeekIntervalCheckbox(dayNumber, checked)}
+                                    checked={ schedule.weekIntervals[ dayNumber ] }
+                                    onChange={ (_, checked) => this.onChangeWeekIntervalCheckbox(dayNumber, checked) }
                                 />
-                                {this.state.weekIntervals[ dayNumber ] && (
+                                { schedule.weekIntervals[ dayNumber ] && (
                                     <Fragment>
                                         <Input
-                                            value={this.state.weekIntervals[ dayNumber ].startTime}
-                                            onChange={(_, val) => this.onChangeInterval(dayNumber, 'startTime', val)}
+                                            value={ schedule.weekIntervals[ dayNumber ].startTime }
+                                            onChange={ (_, val) => this.onChangeInterval(dayNumber, 'startTime', val) }
                                             mask='99:99'
                                         />
-                                        {" - "}
+                                        { " - " }
                                         <Input
-                                            value={this.state.weekIntervals[ dayNumber ].endTime}
-                                            onChange={(_, val) => this.onChangeInterval(dayNumber, 'endTime', val)}
+                                            value={ schedule.weekIntervals[ dayNumber ].endTime }
+                                            onChange={ (_, val) => this.onChangeInterval(dayNumber, 'endTime', val) }
                                             mask='99:99'
                                         />
                                     </Fragment>
-                                )}
+                                ) }
                             </Gapped>
                         </div>
-                    ))}
-
+                    )) }
+                
                 </div>
+                
+                <Button onClick={ (_) => updateSchedule(schedule) }>
+                    Обновить расписание
+                </Button>
             </div>
         );
     }
-
+    
     onChangeInterval = (dayNumber, prop, val) => {
+        const { schedule } = this.state;
+        
         this.setState({
-            weekIntervals: {
-                ...this.state.weekIntervals,
-                [ dayNumber ]: {
-                    ...this.state.weekIntervals[ dayNumber ],
-                    [ prop ]: val,
+            schedule: {
+                ...schedule,
+                weekIntervals: {
+                    ...schedule.weekIntervals,
+                    [ dayNumber ]: {
+                        ...schedule.weekIntervals[ dayNumber ],
+                        [ prop ]: val,
+                    },
                 },
-            },
+            }
+            
         })
     };
-
+    
     onChangeWeekIntervalCheckbox = (dayNumber, checked) => {
+        const { schedule } = this.state;
+        
         if (checked) {
             const weekObj = {
                 startTime: '',
                 endTime: '',
             };
-
+            
             this.setState({
-                weekIntervals: {
-                    ...this.state.weekIntervals,
-                    [ dayNumber ]: weekObj,
-                },
+                schedule: {
+                    ...schedule,
+                    weekIntervals: {
+                        ...schedule.weekIntervals,
+                        [ dayNumber ]: weekObj,
+                    },
+                }
             })
         } else {
-            const { [ dayNumber ]: removed, ...weekIntervals } = this.state.weekIntervals;
-            this.setState({ weekIntervals });
+            const { weekIntervals } = this.state.schedule;
+            delete weekIntervals[ dayNumber ];
+            this.setState({
+                schedule: {
+                    ...schedule,
+                    weekIntervals,
+                }
+            });
         }
     };
-
+    
     onChangeStep(step) {
+        const { schedule } = this.state;
+    
         this.setState({
-            step,
-        })
+            schedule: {
+                ...schedule,
+                step,
+            }
+        });
     }
-
+    
 }
+
+const props = ({ doctor, user }) => {
+    return {
+        user: user.user,
+        doctor: doctor.doctor,
+        schedule: doctor.schedule,
+        doctorLoading: doctor.doctorLoading,
+        doctorLoadError: doctor.doctorLoadError,
+        scheduleUpdating: doctor.scheduleUpdating,
+        scheduleUpdateError: doctor.scheduleUpdateError,
+    };
+};
+
+const actions = {
+    updateSchedule: updateScheduleAction,
+    loadDoctor: loadDoctorAction,
+};
+
+export default withRouter(connect(props, actions)(Schedule));

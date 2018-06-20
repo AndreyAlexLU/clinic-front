@@ -2,20 +2,28 @@
 
 import {
     LOAD_DOCTORS,
+    LOAD_DOCTOR,
     LOAD_DOCTORS_BY_SPEC,
     GET_SPECIALIZATIONS,
     START,
     SUCCESS,
-    FAIL, SAVE_DOCTOR,
+    FAIL, SAVE_DOCTOR, UPDATE_SCHEDULE,
 } from '../constants/actions';
 import { handleActions } from 'redux-actions';
 import type { DoctorType } from '../models/Doctor';
 
 const initialState = {
     doctors: [],
+    doctor: {},
     doctorsBySpec: [],
     specializations: [],
+    schedule: {
+        step: 15,
+        weekIntervals: [],
+    },
     
+    doctorLoading: false,
+    doctorLoadError: null,
     doctorsLoading: false,
     doctorsLoadError: null,
     doctorsBySpecLoading: false,
@@ -23,7 +31,9 @@ const initialState = {
     specializationsLoading: false,
     specializationsLoadError: null,
     doctorSaving: false,
-    doctorSaveError: null
+    doctorSaveError: null,
+    scheduleUpdating: false,
+    scheduleUpdateError: null,
 };
 
 export default handleActions({
@@ -46,6 +56,28 @@ export default handleActions({
             ...state,
             doctorsLoading: false,
             doctorsLoadError: payload,
+        }
+    },
+    
+    [ LOAD_DOCTOR + START ]: (state, { payload }) => {
+        return {
+            ...state,
+            doctorLoading: true,
+            doctorLoadError: null,
+        }
+    },
+    [ LOAD_DOCTOR + SUCCESS ]: (state, { payload }) => {
+        return {
+            ...state,
+            doctorLoading: false,
+            doctor: payload,
+        }
+    },
+    [ LOAD_DOCTOR + FAIL ]: (state, { payload }) => {
+        return {
+            ...state,
+            doctorLoading: false,
+            doctorLoadError: payload,
         }
     },
     [ LOAD_DOCTORS_BY_SPEC + START ]: (state, { payload }) => {
@@ -108,6 +140,27 @@ export default handleActions({
             ...state,
             doctorSaving: false,
             doctorSaveError: payload,
+        }
+    },
+    [ UPDATE_SCHEDULE + START ]: (state, { payload }) => {
+        return {
+            ...state,
+            scheduleUpdating: true,
+            scheduleUpdateError: null,
+        }
+    },
+    [ UPDATE_SCHEDULE + SUCCESS ]: (state, { payload }) => {
+        return {
+            ...state,
+            schedule: payload,
+            scheduleUpdating: false,
+        }
+    },
+    [ UPDATE_SCHEDULE + FAIL ]: (state, { payload }) => {
+        return {
+            ...state,
+            scheduleUpdating: false,
+            scheduleUpdateError: payload,
         }
     },
 }, initialState);

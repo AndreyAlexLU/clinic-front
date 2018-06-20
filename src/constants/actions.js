@@ -5,9 +5,11 @@ export const FAIL = '_FAIL';
 
 // doctors
 export const LOAD_DOCTORS = 'LOAD_DOCTORS';
+export const LOAD_DOCTOR = 'LOAD_DOCTOR';
 export const LOAD_DOCTORS_BY_SPEC = 'LOAD_DOCTORS_BY_SPEC';
 export const GET_SPECIALIZATIONS = 'GET_SPECIALIZATIONS';
 export const SAVE_DOCTOR = 'SAVE_DOCTOR';
+export const UPDATE_SCHEDULE = 'UPDATE_SCHEDULE';
 
 // timetable
 export const LOAD_TIMETABLE = 'LOAD_TIMETABLE';
