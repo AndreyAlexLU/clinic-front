@@ -7,7 +7,7 @@ import {
     GET_SPECIALIZATIONS,
     START,
     SUCCESS,
-    FAIL, SAVE_DOCTOR, UPDATE_SCHEDULE,
+    FAIL, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE,
 } from '../constants/actions';
 import { handleActions } from 'redux-actions';
 import type { DoctorType } from '../models/Doctor';
@@ -34,6 +34,8 @@ const initialState = {
     doctorSaveError: null,
     scheduleUpdating: false,
     scheduleUpdateError: null,
+    scheduleLoading: false,
+    scheduleLoadError: null,
 };
 
 export default handleActions({
@@ -161,6 +163,27 @@ export default handleActions({
             ...state,
             scheduleUpdating: false,
             scheduleUpdateError: payload,
+        }
+    },
+    [ GET_SCHEDULE + START ]: (state, { payload }) => {
+        return {
+            ...state,
+            scheduleLoading: true,
+            scheduleLoadError: null,
+        }
+    },
+    [ GET_SCHEDULE + SUCCESS ]: (state, { payload }) => {
+        return {
+            ...state,
+            schedule: payload,
+            scheduleLoading: false,
+        }
+    },
+    [ GET_SCHEDULE + FAIL ]: (state, { payload }) => {
+        return {
+            ...state,
+            scheduleLoading: false,
+            scheduleLoadError: payload,
         }
     },
 }, initialState);

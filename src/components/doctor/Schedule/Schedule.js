@@ -6,7 +6,7 @@ import { loadTimetableAction, loadTimetableUnitsAction } from '../../../actions/
 import withRouter from 'react-router-dom/es/withRouter';
 import { connect } from 'react-redux';
 import type { ScheduleType } from '../../../models/Schedule';
-import { loadDoctorAction, updateScheduleAction } from '../../../actions/doctor';
+import { getScheduleAction, loadDoctorAction, updateScheduleAction } from '../../../actions/doctor';
 import type { DoctorType } from '../../../models/Doctor';
 import type { User } from '../../../models/User';
 
@@ -18,8 +18,11 @@ type Props = {|
     doctorLoadError: ?Error,
     scheduleUpdating: boolean,
     scheduleUpdateError: ?Error,
+    scheduleLoading: boolean,
+    scheduleLoadError: ?Error,
     
     updateSchedule: (schedule: ScheduleType) => void,
+    getSchedule: (doctorNumber: number) => void,
     loadDoctor: (login: string) => void,
 |};
 
@@ -47,7 +50,10 @@ class Schedule extends Component<Props, State> {
     }
     
     componentDidUpdate(prevProps: Props) {
-        const { doctorLoading, doctorLoadError, doctor } = this.props;
+        const {
+            doctorLoading, doctorLoadError, doctor, getSchedule,
+            schedule,
+        } = this.props;
         
         if (!doctorLoading && prevProps.doctorLoading) {
             if (!doctorLoadError) {
@@ -56,8 +62,16 @@ class Schedule extends Component<Props, State> {
                         ...this.state.schedule,
                         doctorNumber: doctor.personalNumber
                     }
-                })
+                });
+    
+                getSchedule(doctor.personalNumber);
             }
+        }
+        
+        if (schedule !== prevProps.schedule) {
+            this.setState({
+                schedule,
+            })
         }
     }
     
@@ -104,8 +118,8 @@ class Schedule extends Component<Props, State> {
                     </div>
                     <Gapped gap={ 10 }>
                         <Input
-                            value={ this.state.step }
-                            onChange={ this.onChangeStep }
+                            value={ schedule.step }
+                            onChange={ (_, v) => this.onChangeStep(v) }
                             width={ 120 }
                         />
                         
@@ -200,7 +214,7 @@ class Schedule extends Component<Props, State> {
         }
     };
     
-    onChangeStep(step) {
+    onChangeStep = (step) => {
         const { schedule } = this.state;
     
         this.setState({
@@ -226,6 +240,7 @@ const props = ({ doctor, user }) => {
 };
 
 const actions = {
+    getSchedule: getScheduleAction,
     updateSchedule: updateScheduleAction,
     loadDoctor: loadDoctorAction,
 };

@@ -28,4 +28,8 @@ export const DoctorsApi = {
     updateSchedule(schedule: ScheduleType) {
         return axiosInstance.post(`${prefix}/updateSchedule`, schedule);
     },
+    
+    getSchedule(doctorNumber: number) {
+        return axiosInstance.get(`${prefix}/getSchedule/${doctorNumber}`);
+    },
 };
