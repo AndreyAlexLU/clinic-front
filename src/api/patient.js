@@ -21,5 +21,9 @@ export const PatientApi = {
     
     getPatient(login) {
         return axiosInstance.get(`${prefix}/getPatient/${login}`);
+    },
+    
+    get() {
+        return axiosInstance.get(`${prefix}/get`);
     }
 };

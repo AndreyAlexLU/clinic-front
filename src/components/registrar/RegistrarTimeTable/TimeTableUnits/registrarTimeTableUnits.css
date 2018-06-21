@@ -1,0 +1,22 @@
+.timetable-units {
+    display: flex;
+    flex-direction: column;
+}
+
+.timetable-unit {
+    width: 170px;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    text-align: center;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.timetable-unit-free {
+    background-color: rgba(14, 226, 19, 0.13);
+}
+
+.timetable-unit-busy {
+    background-color: rgba(199, 15, 3, 0.13);
+    pointer-events: none;
+}

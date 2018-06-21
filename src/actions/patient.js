@@ -7,7 +7,9 @@ import {
     MAKE_APPOINTMENT,
     SAVE_PATIENT,
     GET_PATIENT,
-    GET_APPOINTMENTS, CANCEL_APPOINTMENT,
+    GET_PATIENTS,
+    GET_APPOINTMENTS,
+    CANCEL_APPOINTMENT,
 } from '../constants/actions';
 import { PatientApi } from '../api/patient';
 import type { TimeTableUnitType } from '../models/TimeTableUnit';
@@ -89,6 +91,22 @@ export const getPatientAction = (login: string) => {
             dispatch(getPatientSuccess(response.data));
         } catch (err) {
             dispatch(getPatientFail(err));
+        }
+    };
+};
+
+const getPatientsStart = createAction(GET_PATIENTS + START);
+const getPatientsSuccess = createAction(GET_PATIENTS + SUCCESS);
+const getPatientsFail = createAction(GET_PATIENTS + FAIL);
+
+export const getPatientsAction = () => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(getPatientsStart());
+            const response = await PatientApi.get();
+            dispatch(getPatientsSuccess(response.data));
+        } catch (err) {
+            dispatch(getPatientsFail(err));
         }
     };
 };

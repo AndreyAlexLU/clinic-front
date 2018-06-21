@@ -1,0 +1,22 @@
+.doctor {
+    width: 200px;
+    height: 120px;
+    margin-right: 10px;
+    background-color: #8d94e2;
+    border: 1px solid #5848e2;
+    cursor: pointer;
+}
+
+.doctor-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.doctor-name {
+    margin: auto;
+    color: white;
+    font-size: 23px;
+    text-decoration: underline;
+    text-align: center;
+}

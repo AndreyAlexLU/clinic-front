@@ -9,6 +9,7 @@ import EmployeeList from '../sysadmin/EmployeeList/EmployeeList';
 import Schedule from '../doctor/Schedule/Schedule';
 import PatientAppointments from '../patient/PatientAppointments/PatientAppointments';
 import DoctorAppointments from '../doctor/DoctorAppointments/DoctorAppointments';
+import RegistrarAppointments from '../registrar/RegistrarAppointments/RegistrarAppointments';
 
 type Props = {
     user: User,
@@ -25,6 +26,7 @@ export class Content extends React.Component<Props, *> {
                 <Route path='/patient/myAppointments' component={ PatientAppointments }/>
                 <Route path='/doctor/schedule' component={ Schedule }/>
                 <Route path='/doctor/appointments' component={ DoctorAppointments }/>
+                <Route path='/registrar/appointment' component={ RegistrarAppointments }/>
                 <Route path='/sysadmin/add' component={ AddEmployee }/>
                 <Route path='/sysadmin/employees/' render={ () => <Redirect to='/sysadmin/employees/1'/> }/>
                 <Route path='/sysadmin/employees/:roleId' component={ EmployeeList }/>
