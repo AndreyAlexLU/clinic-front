@@ -7,6 +7,7 @@ import type { User } from '../../models/User';
 import AddEmployee from '../sysadmin/AddEmployee/AddEmployee';
 import EmployeeList from '../sysadmin/EmployeeList/EmployeeList';
 import Schedule from '../doctor/Schedule/Schedule';
+import PatientAppointments from '../patient/PatientAppointments/PatientAppointments';
 
 type Props = {
     user: User,
@@ -20,6 +21,7 @@ export class Content extends React.Component<Props, *> {
             <div className='content-wrapper'>
                 <ContentMenu user={ user } />
                 <Route path='/patient/appointment' component={ Appointment }/>
+                <Route path='/patient/myAppointments' component={ PatientAppointments }/>
                 <Route path='/doctor/schedule' component={ Schedule }/>
                 <Route path='/sysadmin/add' component={ AddEmployee }/>
                 <Route path='/sysadmin/employees/' render={ () => <Redirect to='/sysadmin/employees/1'/> }/>

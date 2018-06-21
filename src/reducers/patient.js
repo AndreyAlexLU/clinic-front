@@ -8,12 +8,13 @@ import {
     LOGOUT_USER,
     CREATE_USER,
     GET_USER,
-    GET_USERS_BY_ROLE, MAKE_APPOINTMENT, SAVE_PATIENT, GET_PATIENT,
+    GET_USERS_BY_ROLE, MAKE_APPOINTMENT, SAVE_PATIENT, GET_PATIENT, GET_APPOINTMENTS,
 } from '../constants/actions';
 import { handleActions } from 'redux-actions';
 
 const initialState = {
     patient: {},
+    appointments: [],
     
     makeAppointmentLoading: false,
     makeAppointmentLoadError: null,
@@ -21,6 +22,8 @@ const initialState = {
     savePatientLoadError: null,
     patientLoading: false,
     patientLoadError: null,
+    appointmentsLoading: false,
+    appointmentsLoadError: null,
 };
 
 export default handleActions({
@@ -42,6 +45,27 @@ export default handleActions({
             ...state,
             makeAppointmentLoading: false,
             makeAppointmentLoadError: payload,
+        }
+    },
+    [ GET_APPOINTMENTS + START ]: (state, { payload }) => {
+        return {
+            ...state,
+            appointmentsLoading: true,
+            appointmentsLoadError: null,
+        }
+    },
+    [ GET_APPOINTMENTS + SUCCESS ]: (state, { payload }) => {
+        return {
+            ...state,
+            appointmentsLoading: false,
+            appointments: payload,
+        }
+    },
+    [ GET_APPOINTMENTS + FAIL ]: (state, { payload }) => {
+        return {
+            ...state,
+            appointmentsLoading: false,
+            appointmentsLoadError: payload,
         }
     },
     [ SAVE_PATIENT + START ]: (state, { payload }) => {

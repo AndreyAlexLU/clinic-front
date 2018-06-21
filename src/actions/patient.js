@@ -4,7 +4,10 @@ import {
     START,
     FAIL,
     SUCCESS,
-    MAKE_APPOINTMENT, SAVE_PATIENT, GET_PATIENT,
+    MAKE_APPOINTMENT,
+    SAVE_PATIENT,
+    GET_PATIENT,
+    GET_APPOINTMENTS,
 } from '../constants/actions';
 import { PatientApi } from '../api/patient';
 import type { TimeTableUnitType } from '../models/TimeTableUnit';
@@ -22,6 +25,22 @@ export const makeAppointmentAction = (appointment: TimeTableUnitType) => {
             dispatch(makeAppointmentSuccess(response.data));
         } catch (err) {
             dispatch(makeAppointmentFail(err));
+        }
+    };
+};
+
+const getAppointmentsStart = createAction(GET_APPOINTMENTS + START);
+const getAppointmentsSuccess = createAction(GET_APPOINTMENTS + SUCCESS);
+const getAppointmentsFail = createAction(GET_APPOINTMENTS + FAIL);
+
+export const getAppointmentsAction = (patientId: string) => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(getAppointmentsStart());
+            const response = await PatientApi.getAppointments(patientId);
+            dispatch(getAppointmentsSuccess(response.data));
+        } catch (err) {
+            dispatch(getAppointmentsFail(err));
         }
     };
 };

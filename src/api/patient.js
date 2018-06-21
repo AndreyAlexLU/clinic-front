@@ -7,6 +7,10 @@ export const PatientApi = {
         return axiosInstance.post(`${prefix}/makeAppointment`, appointment);
     },
     
+    getAppointments(patientId) {
+        return axiosInstance.get(`${prefix}/getAppointments/${patientId}`);
+    },
+    
     savePatient(patient) {
         return axiosInstance.post(`${prefix}/savePatient`, patient);
     },

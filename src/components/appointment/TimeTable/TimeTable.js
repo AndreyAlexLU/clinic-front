@@ -29,7 +29,7 @@ type Props = {
     
     getTimeTable: (date: string, doctorNumber: number) => void,
     getTimeTableUnits: (date: string, doctorNumber: number) => void,
-    getPatent: (login: string) => void,
+    getPatient: (login: string) => void,
     makeAppointment: (appointment: TimeTableUnitType) => void,
 };
 
