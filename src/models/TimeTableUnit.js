@@ -2,7 +2,7 @@
 
 export type TimeTableUnitType = {|
     id: string,
-    doctorPersonalNumber: number,
+    doctorNumber: number,
     patientId: string,
     status: string,
     date: string,

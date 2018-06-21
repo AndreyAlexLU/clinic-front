@@ -1,7 +1,7 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import './schedule.css';
-import { Button, Checkbox, Gapped, Input, RadioGroup } from 'retail-ui/components/all';
+import { Button, Checkbox, Gapped, Input, Loader, RadioGroup } from 'retail-ui/components/all';
 import { loadTimetableAction, loadTimetableUnitsAction } from '../../../actions/timetable';
 import withRouter from 'react-router-dom/es/withRouter';
 import { connect } from 'react-redux';
@@ -76,7 +76,7 @@ class Schedule extends Component<Props, State> {
     }
     
     render() {
-        const { updateSchedule } = this.props;
+        const { updateSchedule, scheduleUpdating, scheduleLoading } = this.props;
         const { schedule } = this.state;
         
         const weeks = [
@@ -111,60 +111,62 @@ class Schedule extends Component<Props, State> {
         ];
         
         return (
-            <div className='schedule'>
-                <div className='schedule-row'>
-                    <Gapped gap={ 10 }>
-                        Время приема
-                        <Input
-                            value={ schedule.step }
-                            onChange={ (_, v) => this.onChangeStep(v) }
-                            width={ 50 }
-                        />
-                        минут
-                    </Gapped>
+            <Loader active={ scheduleUpdating || scheduleLoading }>
+                <div className='schedule'>
+                    <div className='schedule-row'>
+                        <Gapped gap={ 10 }>
+                            Время приема
+                            <Input
+                                value={ schedule.step }
+                                onChange={ (_, v) => this.onChangeStep(v) }
+                                width={ 50 }
+                            />
+                            минут
+                        </Gapped>
+                    </div>
+        
+                    <div className='schedule-table'>
+                        { weeks.map(({ dayNumber, dayName }) => (
+                            <div className='schedule-table-row'>
+                                <Gapped gap={ 10 }>
+                                    <div className='schedule-table-label'>
+                                        { dayName }
+                                    </div>
+                                    <Checkbox
+                                        checked={ schedule.weekIntervals[ dayNumber ] }
+                                        onChange={ (_, checked) => this.onChangeWeekIntervalCheckbox(dayNumber, checked) }
+                                    />
+                                    { schedule.weekIntervals[ dayNumber ] && (
+                                        <Fragment>
+                                            <Input
+                                                width={ 70 }
+                                                value={ schedule.weekIntervals[ dayNumber ].startTime }
+                                                onChange={ (_, val) => this.onChangeInterval(dayNumber, 'startTime', val) }
+                                                mask='99:99'
+                                            />
+                                            { " - " }
+                                            <Input
+                                                width={ 70 }
+                                                value={ schedule.weekIntervals[ dayNumber ].endTime }
+                                                onChange={ (_, val) => this.onChangeInterval(dayNumber, 'endTime', val) }
+                                                mask='99:99'
+                                            />
+                                        </Fragment>
+                                    ) }
+                                </Gapped>
+                            </div>
+                        )) }
+        
+                    </div>
+        
+                    <div className='schedule-footer'>
+                        <Button onClick={ (_) => updateSchedule(schedule) } use='primary' size='large'>
+                            Обновить расписание
+                        </Button>
+                    </div>
+    
                 </div>
-                
-                <div className='schedule-table'>
-                    { weeks.map(({ dayNumber, dayName }) => (
-                        <div className='schedule-table-row'>
-                            <Gapped gap={ 10 }>
-                                <div className='schedule-table-label'>
-                                    { dayName }
-                                </div>
-                                <Checkbox
-                                    checked={ schedule.weekIntervals[ dayNumber ] }
-                                    onChange={ (_, checked) => this.onChangeWeekIntervalCheckbox(dayNumber, checked) }
-                                />
-                                { schedule.weekIntervals[ dayNumber ] && (
-                                    <Fragment>
-                                        <Input
-                                            width={ 70 }
-                                            value={ schedule.weekIntervals[ dayNumber ].startTime }
-                                            onChange={ (_, val) => this.onChangeInterval(dayNumber, 'startTime', val) }
-                                            mask='99:99'
-                                        />
-                                        { " - " }
-                                        <Input
-                                            width={ 70 }
-                                            value={ schedule.weekIntervals[ dayNumber ].endTime }
-                                            onChange={ (_, val) => this.onChangeInterval(dayNumber, 'endTime', val) }
-                                            mask='99:99'
-                                        />
-                                    </Fragment>
-                                ) }
-                            </Gapped>
-                        </div>
-                    )) }
-                
-                </div>
-                
-                <div className='schedule-footer'>
-                    <Button onClick={ (_) => updateSchedule(schedule) } use='primary' size='large'>
-                        Обновить расписание
-                    </Button>
-                </div>
-                
-            </div>
+            </Loader>
         );
     }
     

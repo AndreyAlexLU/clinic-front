@@ -22,3 +22,9 @@ export const LOGIN_USER = 'LOGIN_USER';
 export const GET_USER = 'GET_USER';
 export const GET_USERS_BY_ROLE = 'GET_USERS_BY_ROLE';
 export const LOGOUT_USER = 'LOGOUT_USER';
+
+// patient
+export const MAKE_APPOINTMENT = 'MAKE_APPOINTMENT';
+export const SAVE_PATIENT = 'SAVE_PATIENT';
+export const GET_PATIENT = 'GET_PATIENT';
+

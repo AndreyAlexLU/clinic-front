@@ -12,6 +12,7 @@ type Props = {|
     loadError: ?Error,
     
     getUnits: (date: string) => void,
+    onMakeAppointment: (appointment) => void,
 |};
 
 export default class TimeTableUnits extends Component<Props, *> {
@@ -30,7 +31,7 @@ export default class TimeTableUnits extends Component<Props, *> {
     }
     
     render() {
-        const { units } = this.props;
+        const { date, units, onMakeAppointment } = this.props;
         
         return (
             <div className='timetable-units'>
@@ -42,8 +43,14 @@ export default class TimeTableUnits extends Component<Props, *> {
                             'timetable-unit-busy': unit.status === 'BUSY',
                         });
                         
+                        const onMakeAppointmentLocal = () => onMakeAppointment({
+                            date,
+                            startTime: unit.startTime,
+                            endTime: unit.endTime,
+                        });
+                        
                         return (
-                            <div className={ classes }>
+                            <div className={ classes } onClick={ onMakeAppointmentLocal }>
                                 { formatTime(unit.startTime) } - { formatTime(unit.endTime) }
                             </div>
                         )

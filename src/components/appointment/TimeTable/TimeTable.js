@@ -8,8 +8,12 @@ import { NavLink, Route } from 'react-router-dom';
 import TimeTableUnits from './TimeTableUnits/TimeTableUnits';
 import withRouter from 'react-router-dom/es/withRouter';
 import type { TimeTableItem } from '../../../models/TimeTableItem';
+import { getPatientAction, makeAppointmentAction } from '../../../actions/patient';
+import type { PatientType } from '../../../models/Patient';
+import type { TimeTableUnitType } from '../../../models/TimeTableUnit';
 
 type Props = {
+    patient: PatientType,
     specializationId: string,
     doctorId: string,
     timetable: TimeTableItem[][],
@@ -18,18 +22,23 @@ type Props = {
     timetableUnitsLoading: boolean,
     timetableLoadError: ?Error,
     timetableUnitsLoadError: ?Error,
+    patientLoading: boolean,
+    patientLoadError: ?Error,
     
     getTimeTable: (date: string, doctorNumber: number) => void,
     getTimeTableUnits: (date: string, doctorNumber: number) => void,
+    getPatent: (login: string) => void,
+    makeAppointment: (appointment: TimeTableUnitType) => void,
 };
 
 class TimeTable extends React.Component<Props, *> {
     
     componentDidMount() {
-        const { doctorId } = this.props;
+        const { doctorId, getPatient, getTimeTable, user } = this.props;
         const currentDate: Date = new Date();
         
-        this.props.getTimeTable(currentDate.toISOString(), doctorId);
+        getTimeTable(currentDate.toISOString(), doctorId);
+        getPatient(user.login);
     }
     
     render() {
@@ -67,6 +76,7 @@ class TimeTable extends React.Component<Props, *> {
                                 getUnits={ (date) => getTimeTableUnits(date, doctorId) }
                                 loading={ timetableUnitsLoading }
                                 loadError={ timetableUnitsLoadError }
+                                onMakeAppointment={ this.onMakeAppointment }
                             />
                         }
                     />
@@ -77,6 +87,20 @@ class TimeTable extends React.Component<Props, *> {
         // TODO loading?
         return null;
     }
+    
+    onMakeAppointment = (appointment) => {
+        const {
+            doctorId,
+            patient,
+            makeAppointment
+        } = this.props;
+        
+        makeAppointment({
+            ...appointment,
+            doctorNumber: doctorId,
+            patientId: patient.id,
+        })
+    };
     
     renderTimetableHeader() {
         const days = [
@@ -150,8 +174,12 @@ class TimeTable extends React.Component<Props, *> {
     
 }
 
-const props = ({ timetable }) => {
+const props = ({ timetable, patient, user }) => {
     return {
+        user: user.user,
+        patient: patient.patient,
+        patientLoading: patient.patientLoading,
+        patientLoadError: patient.patientLoadError,
         timetable: timetable.timetable,
         timetableUnits: timetable.timetableUnits,
         timetableLoading: timetable.timetableLoading,
@@ -164,6 +192,8 @@ const props = ({ timetable }) => {
 const actions = {
     getTimeTable: loadTimetableAction,
     getTimeTableUnits: loadTimetableUnitsAction,
+    getPatient: getPatientAction,
+    makeAppointment: makeAppointmentAction,
 };
 
 export default withRouter(connect(props, actions)(TimeTable));
