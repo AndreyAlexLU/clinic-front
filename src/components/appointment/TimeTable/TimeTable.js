@@ -24,6 +24,8 @@ type Props = {
     timetableUnitsLoadError: ?Error,
     patientLoading: boolean,
     patientLoadError: ?Error,
+    makeAppointmentLoading: boolean,
+    makeAppointmentLoadError: ?Error,
     
     getTimeTable: (date: string, doctorNumber: number) => void,
     getTimeTableUnits: (date: string, doctorNumber: number) => void,
@@ -41,10 +43,23 @@ class TimeTable extends React.Component<Props, *> {
         getPatient(user.login);
     }
     
+    componentDidUpdate(prevProps: Props) {
+        const { makeAppointmentLoading, makeAppointmentLoadError, doctorId, getTimeTable } = this.props;
+        
+        if (prevProps.makeAppointmentLoading && !makeAppointmentLoading) {
+            if (!makeAppointmentLoadError) {
+                const currentDate: Date = new Date();
+    
+                getTimeTable(currentDate.toISOString(), doctorId);
+            }
+        }
+    }
+    
     render() {
         const {
             timetable, specializationId, doctorId, timetableUnits,
             getTimeTableUnits, timetableUnitsLoading, timetableUnitsLoadError,
+            makeAppointmentLoadError, makeAppointmentLoading,
         } = this.props;
         
         if (timetable && timetable.length > 0) {
@@ -77,6 +92,8 @@ class TimeTable extends React.Component<Props, *> {
                                 loading={ timetableUnitsLoading }
                                 loadError={ timetableUnitsLoadError }
                                 onMakeAppointment={ this.onMakeAppointment }
+                                makeAppointmentLoading={ makeAppointmentLoading }
+                                makeAppointmentLoadError={ makeAppointmentLoadError }
                             />
                         }
                     />
@@ -180,6 +197,8 @@ const props = ({ timetable, patient, user }) => {
         patient: patient.patient,
         patientLoading: patient.patientLoading,
         patientLoadError: patient.patientLoadError,
+        makeAppointmentLoading: patient.makeAppointmentLoading,
+        makeAppointmentLoadError: patient.makeAppointmentLoadError,
         timetable: timetable.timetable,
         timetableUnits: timetable.timetableUnits,
         timetableLoading: timetable.timetableLoading,

@@ -10,6 +10,8 @@ type Props = {|
     units: TimeTableUnitType[],
     loading: boolean,
     loadError: ?Error,
+    makeAppointmentLoading: boolean,
+    makeAppointmentLoadError: ?Error,
     
     getUnits: (date: string) => void,
     onMakeAppointment: (appointment) => void,
@@ -23,10 +25,16 @@ export default class TimeTableUnits extends Component<Props, *> {
     }
     
     componentDidUpdate(prevProps: Props) {
-        const { date, getUnits } = this.props;
+        const { date, getUnits, makeAppointmentLoading, makeAppointmentLoadError } = this.props;
         
         if (prevProps.date !== date) {
             getUnits(date);
+        }
+    
+        if (prevProps.makeAppointmentLoading !== makeAppointmentLoading) {
+            if (!makeAppointmentLoadError) {
+                getUnits(date);
+            }
         }
     }
     
