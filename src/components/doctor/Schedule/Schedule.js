@@ -113,16 +113,13 @@ class Schedule extends Component<Props, State> {
         return (
             <div className='schedule'>
                 <div className='schedule-row'>
-                    <div className='schedule-row-label'>
-                        Время приема
-                    </div>
                     <Gapped gap={ 10 }>
+                        Время приема
                         <Input
                             value={ schedule.step }
                             onChange={ (_, v) => this.onChangeStep(v) }
-                            width={ 120 }
+                            width={ 50 }
                         />
-                        
                         минут
                     </Gapped>
                 </div>
@@ -141,12 +138,14 @@ class Schedule extends Component<Props, State> {
                                 { schedule.weekIntervals[ dayNumber ] && (
                                     <Fragment>
                                         <Input
+                                            width={ 70 }
                                             value={ schedule.weekIntervals[ dayNumber ].startTime }
                                             onChange={ (_, val) => this.onChangeInterval(dayNumber, 'startTime', val) }
                                             mask='99:99'
                                         />
                                         { " - " }
                                         <Input
+                                            width={ 70 }
                                             value={ schedule.weekIntervals[ dayNumber ].endTime }
                                             onChange={ (_, val) => this.onChangeInterval(dayNumber, 'endTime', val) }
                                             mask='99:99'
@@ -159,9 +158,12 @@ class Schedule extends Component<Props, State> {
                 
                 </div>
                 
-                <Button onClick={ (_) => updateSchedule(schedule) }>
-                    Обновить расписание
-                </Button>
+                <div className='schedule-footer'>
+                    <Button onClick={ (_) => updateSchedule(schedule) } use='primary' size='large'>
+                        Обновить расписание
+                    </Button>
+                </div>
+                
             </div>
         );
     }

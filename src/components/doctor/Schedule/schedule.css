@@ -8,19 +8,27 @@
 
 .schedule-row-label {
     display: inline-block;
-    width: 150px;
+    width: 120px;
 }
 
 .schedule-table {
-    padding: 20px 10px;
-    border: 1px solid black;
+    padding: 20px 0;
 }
 
 .schedule-table-row {
+    line-height: 40px;
     margin-bottom: 8px;
+}
+
+.schedule-table-row:nth-child(2n-1) {
+    background-color: aliceblue;
 }
 
 .schedule-table-label {
     display: inline-block;
     width: 150px;
+}
+
+.schedule-footer {
+    margin-top: 10px;
 }
