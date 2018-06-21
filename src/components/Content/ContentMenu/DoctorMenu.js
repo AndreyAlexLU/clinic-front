@@ -17,6 +17,15 @@ export default class DoctorMenu extends Component<Props, *> {
                         Расписание
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink
+                        className='content-menu-item'
+                        activeClassName='content-menu-item-active'
+                        to='/doctor/appointments'
+                    >
+                        Приемы
+                    </NavLink>
+                </li>
             </Fragment>
         );
     }

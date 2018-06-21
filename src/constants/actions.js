@@ -6,6 +6,7 @@ export const FAIL = '_FAIL';
 // doctors
 export const LOAD_DOCTORS = 'LOAD_DOCTORS';
 export const LOAD_DOCTOR = 'LOAD_DOCTOR';
+export const GET_DOCTOR_APPOINTMENTS = 'GET_DOCTOR_APPOINTMENTS';
 export const LOAD_DOCTORS_BY_SPEC = 'LOAD_DOCTORS_BY_SPEC';
 export const GET_SPECIALIZATIONS = 'GET_SPECIALIZATIONS';
 export const SAVE_DOCTOR = 'SAVE_DOCTOR';

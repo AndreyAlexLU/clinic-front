@@ -1,0 +1,26 @@
+.doctor-appointments-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: baseline;
+    padding: 30px;
+}
+
+.doctor-appointment-rect {
+    padding: 10px;
+    font-size: 16px;
+    width: 160px;
+    min-height: 120px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #5848e2;
+    display: flex;
+    flex-direction: column;
+}
+
+.doctor-appointment-past {
+    background-color: #b7e2bf;
+}
+
+.doctor-appointment-current {
+    background-color: #dbdfe2;
+}

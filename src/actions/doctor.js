@@ -8,7 +8,7 @@ import {
     GET_SPECIALIZATIONS,
     START,
     FAIL,
-    SUCCESS, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE,
+    SUCCESS, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE, GET_DOCTOR_APPOINTMENTS,
 } from '../constants/actions';
 import Doctor from '../components/appointment/Doctors/Doctor/Doctor';
 import type { DoctorType } from '../models/Doctor';
@@ -26,6 +26,22 @@ export const loadDoctorsAction = () => {
             dispatch(loadDoctorsSuccess(response.data));
         } catch (err) {
             dispatch(loadDoctorsFail(err));
+        }
+    };
+};
+
+const getDoctorAppointmentsStart = createAction(GET_DOCTOR_APPOINTMENTS + START);
+const getDoctorAppointmentsSuccess = createAction(GET_DOCTOR_APPOINTMENTS + SUCCESS);
+const getDoctorAppointmentsFail = createAction(GET_DOCTOR_APPOINTMENTS + FAIL);
+
+export const getDoctorAppointmentsAction = (doctorNumber:number) => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(getDoctorAppointmentsStart());
+            const response = await DoctorsApi.getAppointments(doctorNumber);
+            dispatch(getDoctorAppointmentsSuccess(response.data));
+        } catch (err) {
+            dispatch(getDoctorAppointmentsFail(err));
         }
     };
 };

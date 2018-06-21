@@ -13,6 +13,10 @@ export const DoctorsApi = {
         return axiosInstance.get(`${prefix}/getDoctor/${login}`);
     },
     
+    getAppointments(doctorNumber: number) {
+        return axiosInstance.get(`${prefix}/getAppointments/${doctorNumber}`);
+    },
+    
     getSpecs() {
         return axiosInstance.get(`${prefix}/getSpecs`);
     },
