@@ -10,7 +10,7 @@ type Props = {|
 export default class AppointmentModal extends Component<Props, *> {
     render() {
         const {
-            message, onClose, onConfirm,
+            onClose, onConfirm,
         } = this.props;
         return (
             <Modal>

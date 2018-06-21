@@ -4,6 +4,7 @@ import cn from 'classnames';
 import type { TimeTableUnitType } from '../../../../models/TimeTableUnit';
 import './timeTableUnits.css';
 import { formatTime } from '../../../../utils/formatTime';
+import AppointmentModal from '../../../AppointmentModal/AppointmentModal';
 
 type Props = {|
     date: string,
@@ -17,7 +18,19 @@ type Props = {|
     onMakeAppointment: (appointment) => void,
 |};
 
-export default class TimeTableUnits extends Component<Props, *> {
+type State = {
+    modalOpened: boolean,
+    startTime: string,
+    endTime: string,
+};
+
+export default class TimeTableUnits extends Component<Props, State> {
+    state = {
+        modalOpened: false,
+        startTime: null,
+        endTime: null,
+    };
+    
     componentDidMount() {
         const { date, getUnits } = this.props;
     
@@ -39,7 +52,8 @@ export default class TimeTableUnits extends Component<Props, *> {
     }
     
     render() {
-        const { date, units, onMakeAppointment } = this.props;
+        const { units } = this.props;
+        const { modalOpened } = this.state;
         
         return (
             <div className='timetable-units'>
@@ -50,22 +64,52 @@ export default class TimeTableUnits extends Component<Props, *> {
                             'timetable-unit-free': unit.status === 'FREE',
                             'timetable-unit-busy': unit.status === 'BUSY',
                         });
-                        
-                        const onMakeAppointmentLocal = () => onMakeAppointment({
-                            date,
-                            startTime: unit.startTime,
-                            endTime: unit.endTime,
-                        });
-                        
+    
+                        const onClick = () => {
+                            this.onOpenModal(unit.startTime, unit.endTime)
+                        };
+    
                         return (
-                            <div className={ classes } onClick={ onMakeAppointmentLocal }>
+                            <div className={ classes } onClick={ onClick }>
                                 { formatTime(unit.startTime) } - { formatTime(unit.endTime) }
                             </div>
                         )
                     })
                 }
+    
+                { modalOpened && (
+                    <AppointmentModal
+                        onConfirm={ this.onMakeAppointment }
+                        onClose={ this.onCloseModal }
+                    />
+                )}
             </div>
         );
     }
+    
+    onMakeAppointment = () => {
+        const { startTime, endTime } = this.state;
+        const { date, onMakeAppointment } = this.props;
+        
+        onMakeAppointment({
+            date,
+            startTime,
+            endTime,
+        });
+        
+        this.onCloseModal();
+    };
+    
+    onOpenModal = (startTime: string, endTime: string) => {
+        this.setState({
+            modalOpened: true,
+            startTime,
+            endTime,
+        })
+    };
+    
+    onCloseModal = () => {
+        this.setState({modalOpened: false})
+    };
 }
 
