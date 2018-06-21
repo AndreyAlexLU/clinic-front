@@ -8,7 +8,7 @@ import {
     LOGOUT_USER,
     CREATE_USER,
     GET_USER,
-    GET_USERS_BY_ROLE, MAKE_APPOINTMENT, SAVE_PATIENT, GET_PATIENT, GET_APPOINTMENTS,
+    GET_USERS_BY_ROLE, MAKE_APPOINTMENT, SAVE_PATIENT, GET_PATIENT, GET_APPOINTMENTS, CANCEL_APPOINTMENT,
 } from '../constants/actions';
 import { handleActions } from 'redux-actions';
 
@@ -45,6 +45,32 @@ export default handleActions({
             ...state,
             makeAppointmentLoading: false,
             makeAppointmentLoadError: payload,
+        }
+    },
+    [ CANCEL_APPOINTMENT + START ]: (state, { payload }) => {
+        return {
+            ...state,
+        }
+    },
+    [ CANCEL_APPOINTMENT + SUCCESS ]: (state, { payload }) => {
+        const index = state.appointments.findIndex(a => a.id === payload);
+        
+        if (index > -1) {
+            return {
+                ...state,
+                appointments: [
+                    ...state.appointments.slice(0, index),
+                    ...state.appointments.slice(index + 1)
+                ]
+            }
+        } else {
+            return state;
+        }
+        
+    },
+    [ CANCEL_APPOINTMENT + FAIL ]: (state, { payload }) => {
+        return {
+            ...state,
         }
     },
     [ GET_APPOINTMENTS + START ]: (state, { payload }) => {

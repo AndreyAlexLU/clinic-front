@@ -7,7 +7,7 @@ import {
     MAKE_APPOINTMENT,
     SAVE_PATIENT,
     GET_PATIENT,
-    GET_APPOINTMENTS,
+    GET_APPOINTMENTS, CANCEL_APPOINTMENT,
 } from '../constants/actions';
 import { PatientApi } from '../api/patient';
 import type { TimeTableUnitType } from '../models/TimeTableUnit';
@@ -25,6 +25,22 @@ export const makeAppointmentAction = (appointment: TimeTableUnitType) => {
             dispatch(makeAppointmentSuccess(response.data));
         } catch (err) {
             dispatch(makeAppointmentFail(err));
+        }
+    };
+};
+
+const cancelAppointmentStart = createAction(CANCEL_APPOINTMENT + START);
+const cancelAppointmentSuccess = createAction(CANCEL_APPOINTMENT + SUCCESS);
+const cancelAppointmentFail = createAction(CANCEL_APPOINTMENT + FAIL);
+
+export const cancelAppointmentAction = (appointmentId: string) => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(cancelAppointmentStart());
+            const response = await PatientApi.cancelAppointment(appointmentId);
+            dispatch(cancelAppointmentSuccess(appointmentId));
+        } catch (err) {
+            dispatch(cancelAppointmentFail(err));
         }
     };
 };

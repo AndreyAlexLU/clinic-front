@@ -25,6 +25,7 @@ export const LOGOUT_USER = 'LOGOUT_USER';
 
 // patient
 export const MAKE_APPOINTMENT = 'MAKE_APPOINTMENT';
+export const CANCEL_APPOINTMENT = 'CANCEL_APPOINTMENT';
 export const GET_APPOINTMENTS = 'GET_APPOINTMENTS';
 export const SAVE_PATIENT = 'SAVE_PATIENT';
 export const GET_PATIENT = 'GET_PATIENT';

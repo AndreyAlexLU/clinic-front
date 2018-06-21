@@ -4,11 +4,12 @@ import cn from 'classnames';
 import './patientAppointments.css';
 import withRouter from 'react-router-dom/es/withRouter';
 import { connect } from 'react-redux';
-import { getAppointmentsAction, getPatientAction } from '../../../actions/patient';
+import { cancelAppointmentAction, getAppointmentsAction, getPatientAction } from '../../../actions/patient';
 import type { PatientType } from '../../../models/Patient';
 import type { User } from '../../../models/User';
 import formatDateTime from '../../../utils/formatDateTime';
 import { getFullName } from '../../../utils/getFullName';
+import { Button, Icon } from 'retail-ui/components/all';
 
 type Props = {|
     patient: PatientType,
@@ -20,6 +21,7 @@ type Props = {|
     
     getAppointments: (patientId: string) => void,
     getPatient: (login: string) => void,
+    cancelAppointment: (id: string) => void,
 |};
 
 class PatientAppointments extends Component<Props, *> {
@@ -44,11 +46,11 @@ class PatientAppointments extends Component<Props, *> {
     }
     
     render() {
-        const { appointments } = this.props;
+        const { appointments, cancelAppointment } = this.props;
         
         return (
             <div className='patient-appointments-grid'>
-                { appointments.reverse().map(appointment => {
+                { appointments.map(appointment => {
                     const {
                         startTime,
                         date,
@@ -61,7 +63,7 @@ class PatientAppointments extends Component<Props, *> {
                     appointmentDate.setHours(timeChunks[0]);
                     appointmentDate.setMinutes(timeChunks[1]);
                     
-                    const formattedDate = formatDateTime(appointmentDate)
+                    const formattedDate = formatDateTime(appointmentDate);
                     const message = appointmentDate <= currentDate
                         ? `Прошедший прием`
                         : `Запланирован прием`;
@@ -83,6 +85,13 @@ class PatientAppointments extends Component<Props, *> {
                             <span>
                                 {specialization} { getFullName(appointment)}
                             </span>
+                            <br />
+                            { appointmentDate > currentDate && (
+                                <Button use='pay' onClick={ () => cancelAppointment(appointment.id) }>
+                                    Отменить
+                                </Button>
+                            ) }
+                            
                         </div>
                     )
                 })}
@@ -105,6 +114,7 @@ const props = ({ user, patient }) => {
 const actions = {
     getAppointments: getAppointmentsAction,
     getPatient: getPatientAction,
+    cancelAppointment: cancelAppointmentAction,
 };
 
 export default withRouter(connect(props, actions)(PatientAppointments));
