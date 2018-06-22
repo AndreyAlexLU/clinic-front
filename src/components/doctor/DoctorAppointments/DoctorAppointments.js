@@ -35,12 +35,16 @@ class DoctorAppointments extends Component<Props, *> {
     }
     
     componentDidUpdate(prevProps: Props) {
-        const { doctorLoading, doctorLoadError, doctor, getAppointments } = this.props;
+        const { doctorLoading, doctorLoadError, doctor, getAppointments, user } = this.props;
         
         if (prevProps.doctorLoading && !doctorLoading) {
             if (!doctorLoadError) {
                 getAppointments(doctor.personalNumber);
             }
+        }
+    
+        if (prevProps.user.login !== user.login) {
+            getAppointments(doctor.personalNumber);
         }
     }
     

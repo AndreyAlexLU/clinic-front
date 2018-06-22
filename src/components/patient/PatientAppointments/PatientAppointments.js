@@ -36,12 +36,16 @@ class PatientAppointments extends Component<Props, *> {
     }
     
     componentDidUpdate(prevProps: Props) {
-        const { patientLoading, patientLoadError, patient, getAppointments } = this.props;
+        const { patientLoading, patientLoadError, patient, getAppointments, user } = this.props;
         
         if (prevProps.patientLoading && !patientLoading) {
             if (!patientLoadError) {
                 getAppointments(patient.id);
             }
+        }
+    
+        if (prevProps.user.login !== user.login) {
+            getAppointments(patient.id);
         }
     }
     

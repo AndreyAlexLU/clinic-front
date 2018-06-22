@@ -12,6 +12,13 @@ export default class RegistrarMenu extends Component<Props, *> {
                     <NavLink
                         className='content-menu-item'
                         activeClassName='content-menu-item-active'
+                        to='/registrar/add'
+                    >
+                        Добавление пациента
+                    </NavLink>
+                    <NavLink
+                        className='content-menu-item'
+                        activeClassName='content-menu-item-active'
                         to='/registrar/appointment'
                     >
                         Запись пациента

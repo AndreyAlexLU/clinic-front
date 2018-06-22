@@ -16,7 +16,7 @@ export const PatientApi = {
     },
     
     savePatient(patient) {
-        return axiosInstance.post(`${prefix}/savePatient`, patient);
+        return axiosInstance.post(`${prefix}/save`, patient);
     },
     
     getPatient(login) {
