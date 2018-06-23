@@ -6,6 +6,7 @@ import { RolesEnum } from '../../../constants/roles';
 import SysAdminMenu from './SysAdminMenu';
 import DoctorMenu from './DoctorMenu';
 import RegistrarMenu from './RegistrarMenu';
+import AdminMenu from './AdminMenu';
 
 type Props = {
     user: User,
@@ -27,6 +28,9 @@ export default class ContentMenu extends React.Component<Props, *> {
                 )}
                 { roleId === RolesEnum.REGISTRAR && (
                     <RegistrarMenu/>
+                )}
+                { roleId === RolesEnum.ADMINISTRATION && (
+                    <AdminMenu/>
                 )}
             </ul>
         );

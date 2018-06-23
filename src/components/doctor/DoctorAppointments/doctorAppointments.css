@@ -32,6 +32,8 @@
 
 #print {
     width: 800px;
+    padding-bottom: 100px;
+    border-bottom: 1px solid black;
 }
 
 #print h3 {

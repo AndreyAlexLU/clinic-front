@@ -160,6 +160,17 @@ export default class UserForm extends Component<Props, State> {
     
                         <div className='user-form-row'>
                             <div className='user-form-label'>
+                                Стоимость приема
+                            </div>
+                            <Input
+                                width={ 150 }
+                                value={ this.state.doctor.cost }
+                                onChange={ (_, val) => this.onChangeDoctor('cost', val) }
+                            />
+                        </div>
+    
+                        <div className='user-form-row'>
+                            <div className='user-form-label'>
                                 Опыт
                             </div>
                             <Input

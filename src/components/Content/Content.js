@@ -11,6 +11,7 @@ import PatientAppointments from '../patient/PatientAppointments/PatientAppointme
 import DoctorAppointments from '../doctor/DoctorAppointments/DoctorAppointments';
 import RegistrarAppointments from '../registrar/RegistrarAppointments/RegistrarAppointments';
 import AddPatient from '../registrar/AddPatient/AddPatient';
+import AdminStatistics from '../admin/AdminStatistics/AdminStatistics';
 
 type Props = {
     user: User,
@@ -32,6 +33,7 @@ export class Content extends React.Component<Props, *> {
                 <Route path='/sysadmin/add' component={ AddEmployee }/>
                 <Route path='/sysadmin/employees/' render={ () => <Redirect to='/sysadmin/employees/1'/> }/>
                 <Route path='/sysadmin/employees/:roleId' component={ EmployeeList }/>
+                <Route path='/admin/stat' component={ AdminStatistics }/>
             </div>
         )
     }

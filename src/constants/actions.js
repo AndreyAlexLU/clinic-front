@@ -34,4 +34,6 @@ export const SAVE_PATIENT = 'SAVE_PATIENT';
 export const GET_PATIENT = 'GET_PATIENT';
 export const GET_PATIENTS = 'GET_PATIENTS';
 
-
+// admin
+export const GET_PATIENTS_NUMBER = 'GET_PATIENTS_NUMBER';
+export const GET_STATISTICS = 'GET_STATISTICS';

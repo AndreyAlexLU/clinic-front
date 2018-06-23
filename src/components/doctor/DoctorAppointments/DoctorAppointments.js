@@ -98,7 +98,7 @@ class DoctorAppointments extends Component<Props, State> {
     }
     
     render() {
-        const { appointments, user, saveCardItem, saveCardItemLoading, saveCardItemLoadError, cardItems } = this.props;
+        const { appointments, user, saveCardItem, saveCardItemLoading, saveCardItemLoadError, cardItems, doctor } = this.props;
         const { sidepageOpened, currentAppointment, sidepageCardOpened, currentCard } = this.state;
         
         return (
@@ -189,7 +189,7 @@ class DoctorAppointments extends Component<Props, State> {
                 />
                 
                 <div id='print' style={{ visibility: 'hidden' }}>
-                    <h3 style={{ paddingLeft: '40%  '}}>
+                    <h3 style={{ paddingLeft: '40%'}}>
                         Заключение от { formatDate(new Date(currentCard.date)) }
                     </h3>
                     <p>
@@ -212,8 +212,13 @@ class DoctorAppointments extends Component<Props, State> {
                         </span>
                     </p>
                     
-                    <strong style={{paddingLeft: '60%  '}}>
+                    <strong style={{paddingLeft: '60%'}}>
                         Врач: { currentCard.doctorFIO }
+                    </strong>
+                    <br/>
+                    <br/>
+                    <strong style={{paddingLeft: '60%'}}>
+                        Стоимость приема: { doctor.cost } ₽
                     </strong>
                 </div>
             </div>
