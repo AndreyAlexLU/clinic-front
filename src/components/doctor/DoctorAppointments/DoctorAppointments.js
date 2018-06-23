@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import printJS from 'print-js';
 import cn from 'classnames';
 import './doctorAppointments.css';
 import { getFullName } from '../../../utils/getFullName';
@@ -19,6 +20,7 @@ import DoctorAppointmentSidepage from './DoctorAppointmentSidepage/DoctorAppoint
 import type { CardItem } from '../../../models/CardItem';
 import DoctorAppointmentCardSidepage from './DoctorAppointmentCardSidepage/DoctorAppointmentCardSidepage';
 import Toast from 'retail-ui/components/Toast/index';
+import formatDate from '../../../utils/formatDate';
 
 type Props = {|
     doctor: DoctorType,
@@ -96,7 +98,7 @@ class DoctorAppointments extends Component<Props, State> {
     }
     
     render() {
-        const { appointments, doctor, saveCardItem, saveCardItemLoading, saveCardItemLoadError, cardItems } = this.props;
+        const { appointments, user, saveCardItem, saveCardItemLoading, saveCardItemLoadError, cardItems } = this.props;
         const { sidepageOpened, currentAppointment, sidepageCardOpened, currentCard } = this.state;
         
         return (
@@ -133,7 +135,7 @@ class DoctorAppointments extends Component<Props, State> {
                     
                     const foundCard = cardItems[appointment.patientId]
                         && cardItems[appointment.patientId].find(c => c.date === date);
-                    console.log(date, foundCard, appointment.patientId);
+
                     return (
                         <div className={ classes }>
                             <span>
@@ -168,7 +170,7 @@ class DoctorAppointments extends Component<Props, State> {
                     patientId={ currentAppointment.patientId }
                     doctorNumber={ currentAppointment.doctorNumber }
                     date={ currentAppointment.date }
-                    doctorFIO={ getFullName(doctor) }
+                    doctorFIO={ getFullName(user) }
                     patientFIO={ getFullName(currentAppointment) }
                     loading={ saveCardItemLoading }
                     loadError={ saveCardItemLoadError }
@@ -183,8 +185,37 @@ class DoctorAppointments extends Component<Props, State> {
                     card={ currentCard }
         
                     onClose={ this.onCloseCardSidepage }
-                    onPrint={ null }
+                    onPrint={ this.onPrint }
                 />
+                
+                <div id='print' style={{ visibility: 'hidden' }}>
+                    <h3 style={{ paddingLeft: '40%  '}}>
+                        Заключение от { formatDate(new Date(currentCard.date)) }
+                    </h3>
+                    <p>
+                        Пациент: { currentCard.patientFIO }
+                    </p>
+                    
+                    <p>
+                        Диагноз:
+                        &nbsp;
+                        <span style={{ textDecoration: 'underline'}}>
+                            { currentCard.diagnosis }
+                        </span>
+                    </p>
+                    
+                    <p>
+                        Рекомендации:
+                        &nbsp;
+                        <span style={{ textDecoration: 'underline'}}>
+                            { currentCard.recommendations }
+                        </span>
+                    </p>
+                    
+                    <strong style={{paddingLeft: '60%  '}}>
+                        Врач: { currentCard.doctorFIO }
+                    </strong>
+                </div>
             </div>
         );
     }
@@ -195,6 +226,10 @@ class DoctorAppointments extends Component<Props, State> {
         });
         
         this.props.saveCardItem(cardItem);
+    };
+    
+    onPrint = () => {
+        printJS('print', 'html');
     };
     
     onOpenCardSidepage = (foundCard) => {

@@ -19,11 +19,10 @@ type Props = {|
 
 export default class DoctorAppointmentCardSidepage extends Component<Props, *> {
     render() {
-        const { sidepageOpened, onClose } = this.props;
+        const { sidepageOpened, onClose, onPrint } = this.props;
         const {
             patientFIO, date, doctorFIO, diagnosis, recommendations,
         } = this.props.card;
-        
         
         const formattedDate = formatDate(new Date(date));
         
@@ -49,34 +48,12 @@ export default class DoctorAppointmentCardSidepage extends Component<Props, *> {
                 </SidePage.Body>
                 <SidePage.Footer panel>
                     <Gapped gap={ 10 }>
-                        <Button onClick={ this.onPrint }>Печать</Button>
+                        <Button onClick={ onPrint }>Печать</Button>
                         <Button onClick={ onClose }>Отмена</Button>
                     </Gapped>
                 </SidePage.Footer>
             </SidePage>
         );
     }
-    
-    
-    onPrint = () => {
-        /*const {
-            patientFIO, doctorFIO, patientId, doctorNumber,
-            date, onPrint
-        } = this.props;
-        
-        const { diagnosis, recommendations } = this.state;
-        
-        const cardItem: CardItem = {
-            patientId,
-            doctorNumber,
-            date,
-            diagnosis,
-            recommendations,
-            patientFIO,
-            doctorFIO,
-        };
-    
-        onPrint(cardItem);*/
-    };
     
 }

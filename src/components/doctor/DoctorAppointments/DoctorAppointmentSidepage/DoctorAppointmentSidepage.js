@@ -100,7 +100,6 @@ export default class DoctorAppointmentSidepage extends Component<Props, *> {
                 <SidePage.Footer panel>
                     <Gapped gap={ 10 }>
                         <Button use='primary' onClick={ this.onSave }>Сохранить</Button>
-                        <Button onClick={ this.onPrint }>Печать</Button>
                         <Button onClick={ onClose }>Отмена</Button>
                     </Gapped>
                 </SidePage.Footer>
@@ -127,27 +126,6 @@ export default class DoctorAppointmentSidepage extends Component<Props, *> {
         };
         
         onSave(cardItem);
-    };
-    
-    onPrint = () => {
-        const {
-            patientFIO, doctorFIO, patientId, doctorNumber,
-            date, onPrint
-        } = this.props;
-        
-        const { diagnosis, recommendations } = this.state;
-        
-        const cardItem: CardItem = {
-            patientId,
-            doctorNumber,
-            date,
-            diagnosis,
-            recommendations,
-            patientFIO,
-            doctorFIO,
-        };
-    
-        onPrint(cardItem);
     };
     
     onChangeDiagnosis = (ev, diagnosis) => {
