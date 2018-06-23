@@ -1,0 +1,17 @@
+.doctor-appointment-sidepage-wrapper {
+    padding: 15px 30px;
+}
+
+.doctor-appointment-sidepage-patient {
+    margin-bottom: 20px;
+}
+
+.doctor-appointment-sidepage-label {
+    display: block;
+    margin-bottom: 25px;
+}
+
+.doctor-appointment-sidepage-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+}

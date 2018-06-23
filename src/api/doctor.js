@@ -1,6 +1,7 @@
 import { axiosInstance } from '../axiosInstance';
 import type { DoctorType } from '../models/Doctor';
 import type { ScheduleType } from '../models/Schedule';
+import type { CardItem } from '../models/CardItem';
 
 const prefix = '/doctor';
 
@@ -36,4 +37,8 @@ export const DoctorsApi = {
     getSchedule(doctorNumber: number) {
         return axiosInstance.get(`${prefix}/getSchedule/${doctorNumber}`);
     },
+    
+    saveCardItem(cardItem: CardItem) {
+        return axiosInstance.post(`${prefix}/saveCardItem`, cardItem);
+    }
 };

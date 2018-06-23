@@ -8,11 +8,12 @@ import {
     GET_SPECIALIZATIONS,
     START,
     FAIL,
-    SUCCESS, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE, GET_DOCTOR_APPOINTMENTS,
+    SUCCESS, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE, GET_DOCTOR_APPOINTMENTS, SAVE_CARD_ITEM,
 } from '../constants/actions';
 import Doctor from '../components/appointment/Doctors/Doctor/Doctor';
 import type { DoctorType } from '../models/Doctor';
 import type { ScheduleType } from '../models/Schedule';
+import type { CardItem } from '../models/CardItem';
 
 const loadDoctorsStart = createAction(LOAD_DOCTORS + START);
 const loadDoctorsSuccess = createAction(LOAD_DOCTORS + SUCCESS);
@@ -139,6 +140,22 @@ export const getScheduleAction = (doctorNumber: number) => {
             dispatch(getScheduleSuccess(response.data));
         } catch (err) {
             dispatch(getScheduleFail(err));
+        }
+    };
+};
+
+const saveCardItemStart = createAction(SAVE_CARD_ITEM + START);
+const saveCardItemSuccess = createAction(SAVE_CARD_ITEM + SUCCESS);
+const saveCardItemFail = createAction(SAVE_CARD_ITEM + FAIL);
+
+export const saveCardItemAction = (cardItem: CardItem) => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(saveCardItemStart());
+            const response = await DoctorsApi.saveCardItem(cardItem);
+            dispatch(saveCardItemSuccess(response.data));
+        } catch (err) {
+            dispatch(saveCardItemFail(err));
         }
     };
 };

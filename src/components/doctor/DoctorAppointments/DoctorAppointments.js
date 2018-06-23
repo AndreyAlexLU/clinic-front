@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { getDoctorAppointmentsAction, loadDoctorAction } from '../../../actions/doctor';
 import type { DoctorType } from '../../../models/Doctor';
 import { Button } from 'retail-ui/components/all';
+import DoctorAppointmentSidepage from './DoctorAppointmentSidepage/DoctorAppointmentSidepage';
 
 type Props = {|
     doctor: DoctorType,
@@ -23,7 +24,18 @@ type Props = {|
     getDoctor: (login: string) => void,
 |};
 
-class DoctorAppointments extends Component<Props, *> {
+type State = {
+    sidepageOpened: boolean,
+    currentAppointment: Object,
+}
+
+class DoctorAppointments extends Component<Props, State> {
+    
+    state = {
+        sidepageOpened: false,
+        currentAppointment: {},
+    };
+    
     componentDidMount() {
         const { user, doctor, getDoctor, getAppointments } = this.props;
         
@@ -49,7 +61,8 @@ class DoctorAppointments extends Component<Props, *> {
     }
     
     render() {
-        const { appointments } = this.props;
+        const { appointments, doctor } = this.props;
+        const { sidepageOpened, currentAppointment } = this.state;
         
         return (
             <div className='doctor-appointments-grid'>
@@ -89,16 +102,41 @@ class DoctorAppointments extends Component<Props, *> {
                             </span>
                             <br/>
                             { appointmentDate <= currentDate && (
-                                <Button onClick={ null }>
+                                <Button onClick={ () => this.onOpenSidepage(appointment) }>
                                     Заполнить карту
                                 </Button>
                             ) }
                         </div>
                     )
                 })}
+                
+                <DoctorAppointmentSidepage
+                    sidepageOpened={ sidepageOpened }
+                    patientId={ currentAppointment.patientId }
+                    doctorNumber={ currentAppointment.doctorNumber }
+                    date={ currentAppointment.date }
+                    doctorFIO={ getFullName(doctor) }
+                    patientFIO={ getFullName(currentAppointment) }
+
+                    onClose={ this.onCloseSidepage }
+                    
+                />
             </div>
         );
     }
+    
+    onOpenSidepage = (appointment: Object) => {
+        this.setState({
+            currentAppointment: appointment,
+            sidepageOpened: true,
+        })
+    };
+    
+    onCloseSidepage = () => {
+        this.setState({
+            sidepageOpened: false,
+        })
+    };
 }
 
 const props = ({ user, doctor }) => {

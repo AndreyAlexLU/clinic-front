@@ -7,7 +7,7 @@ import {
     GET_SPECIALIZATIONS,
     START,
     SUCCESS,
-    FAIL, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE, GET_DOCTOR_APPOINTMENTS,
+    FAIL, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE, GET_DOCTOR_APPOINTMENTS, SAVE_CARD_ITEM,
 } from '../constants/actions';
 import { handleActions } from 'redux-actions';
 import type { DoctorType } from '../models/Doctor';
@@ -39,6 +39,8 @@ const initialState = {
     scheduleLoadError: null,
     appointmentsLoading: false,
     appointmentsLoadError:null,
+    saveCardItemLoading: false,
+    saveCardItemLoadError: null,
 };
 
 export default handleActions({
@@ -209,6 +211,26 @@ export default handleActions({
             ...state,
             scheduleLoading: false,
             scheduleLoadError: payload,
+        }
+    },
+    [ SAVE_CARD_ITEM + START ]: (state, { payload }) => {
+        return {
+            ...state,
+            saveCardItemLoading: true,
+            saveCardItemLoadError: null,
+        }
+    },
+    [ SAVE_CARD_ITEM + SUCCESS ]: (state, { payload }) => {
+        return {
+            ...state,
+            saveCardItemLoading: false,
+        }
+    },
+    [ SAVE_CARD_ITEM + FAIL ]: (state, { payload }) => {
+        return {
+            ...state,
+            saveCardItemLoading: false,
+            saveCardItemLoadError: payload,
         }
     },
 }, initialState);
