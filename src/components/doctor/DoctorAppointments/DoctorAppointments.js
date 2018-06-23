@@ -7,10 +7,11 @@ import formatDateTime from '../../../utils/formatDateTime';
 import type { User } from '../../../models/User';
 import withRouter from 'react-router-dom/es/withRouter';
 import { connect } from 'react-redux';
-import { getDoctorAppointmentsAction, loadDoctorAction } from '../../../actions/doctor';
+import { getDoctorAppointmentsAction, loadDoctorAction, saveCardItemAction } from '../../../actions/doctor';
 import type { DoctorType } from '../../../models/Doctor';
 import { Button } from 'retail-ui/components/all';
 import DoctorAppointmentSidepage from './DoctorAppointmentSidepage/DoctorAppointmentSidepage';
+import type { CardItem } from '../../../models/CardItem';
 
 type Props = {|
     doctor: DoctorType,
@@ -19,9 +20,12 @@ type Props = {|
     
     doctorLoading: boolean,
     doctorLoadError: ?Error,
+    saveCardItemLoading: boolean,
+    saveCardItemLoadError: ?Error,
     
     getAppointments: (doctorNumber: number) => void,
     getDoctor: (login: string) => void,
+    saveCardItem: (cardItem: CardItem) => void,
 |};
 
 type State = {
@@ -61,7 +65,7 @@ class DoctorAppointments extends Component<Props, State> {
     }
     
     render() {
-        const { appointments, doctor } = this.props;
+        const { appointments, doctor, saveCardItem, saveCardItemLoading, saveCardItemLoadError } = this.props;
         const { sidepageOpened, currentAppointment } = this.state;
         
         return (
@@ -117,8 +121,11 @@ class DoctorAppointments extends Component<Props, State> {
                     date={ currentAppointment.date }
                     doctorFIO={ getFullName(doctor) }
                     patientFIO={ getFullName(currentAppointment) }
+                    loading={ saveCardItemLoading }
+                    loadError={ saveCardItemLoadError }
 
                     onClose={ this.onCloseSidepage }
+                    onSave={ saveCardItem }
                     
                 />
             </div>
@@ -147,12 +154,15 @@ const props = ({ user, doctor }) => {
     
         doctorLoading: doctor.doctorLoading,
         doctorLoadError: doctor.doctorLoadError,
+        saveCardItemLoading: doctor.saveCardItemLoading,
+        saveCardItemLoadError: doctor.saveCardItemLoadError,
     };
 };
 
 const actions = {
     getAppointments: getDoctorAppointmentsAction,
     getDoctor: loadDoctorAction,
+    saveCardItem: saveCardItemAction,
 };
 
 export default withRouter(connect(props, actions)(DoctorAppointments));

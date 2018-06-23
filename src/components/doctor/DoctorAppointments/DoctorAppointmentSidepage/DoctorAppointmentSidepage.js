@@ -1,8 +1,9 @@
 // @flow
 import React, { Component } from 'react';
+import Toast from 'retail-ui/components/Toast';
 import './doctorAppointmentSidepage.css';
 import SidePage from 'retail-ui/components/SidePage/SidePage';
-import { Button, Input, Textarea } from 'retail-ui/components/all';
+import { Button, Gapped, Input, Loader, Textarea } from 'retail-ui/components/all';
 import { getFullName } from '../../../../utils/getFullName';
 import formatDate from '../../../../utils/formatDate';
 import type { CardItem } from '../../../../models/CardItem';
@@ -14,6 +15,8 @@ type Props = {|
     date: string,
     doctorFIO: string,
     patientFIO: string,
+    loading: boolean,
+    loadError: ?Error,
     
     onClose: () => void,
     onSave: (cardItem: CardItem) => void,
@@ -32,9 +35,22 @@ export default class DoctorAppointmentSidepage extends Component<Props, *> {
         recommendations: '',
     };
     
+    componentDidUpdate(prevProps: Props) {
+        const { loading, loadError, onClose } = this.props;
+        
+        if (prevProps.loading && !loading) {
+            if (!loadError) {
+                Toast.push('Заключение сохранено');
+                onClose();
+            } else {
+                Toast.push('Ошибка при сохранении заключения');
+            }
+        }
+    }
+    
     render() {
         const {
-            patientFIO, date, sidepageOpened, onClose
+            patientFIO, date, sidepageOpened, onClose, loading
         } = this.props;
         
         const { diagnosis, recommendations } = this.state;
@@ -46,43 +62,47 @@ export default class DoctorAppointmentSidepage extends Component<Props, *> {
         }
         
         return (
-            <SidePage onClose={ onClose }>
+            <SidePage width={ 770 } onClose={ onClose }>
                 <SidePage.Header>Заключение от { formattedDate }</SidePage.Header>
                 <SidePage.Body>
-                    <div className='doctor-appointment-sidepage-wrapper'>
-                        <div className='doctor-appointment-sidepage-patient'>
-                            Пациент: { patientFIO }
+                    <Loader active={ loading }>
+                        <div className='doctor-appointment-sidepage-wrapper'>
+                            <div className='doctor-appointment-sidepage-patient'>
+                                Пациент: { patientFIO }
+                            </div>
+                            <label className='doctor-appointment-sidepage-label'>
+                                <p className='doctor-appointment-sidepage-title'>
+                                    Диагноз
+                                </p>
+                                <Input
+                                    autoFocus
+                                    value={ diagnosis }
+                                    onChange={ this.onChangeDiagnosis }
+                                    width={ 620 }
+                                />
+                            </label>
+        
+                            <label className='doctor-appointment-sidepage-label'>
+                                <p className='doctor-appointment-sidepage-title'>
+                                    Рекомендации
+                                </p>
+                                <Textarea
+                                    value={ recommendations }
+                                    onChange={ this.onChangeRecommendations }
+                                    resize='none'
+                                    rows={ 5 }
+                                    width={ 620 }
+                                />
+                            </label>
                         </div>
-                        <label className='doctor-appointment-sidepage-label'>
-                            <p className='doctor-appointment-sidepage-title'>
-                                Диагноз
-                            </p>
-                            <Input
-                                autoFocus
-                                value={ diagnosis }
-                                onChange={ this.onChangeDiagnosis }
-                                width={ 620 }
-                            />
-                        </label>
-    
-                        <label className='doctor-appointment-sidepage-label'>
-                            <p className='doctor-appointment-sidepage-title'>
-                                Рекомендации
-                            </p>
-                            <Textarea
-                                value={ recommendations }
-                                onChange={ this.onChangeRecommendations }
-                                resize='none'
-                                rows={ 5 }
-                                width={ 620 }
-                            />
-                        </label>
-                    </div>
+                    </Loader>
                 </SidePage.Body>
                 <SidePage.Footer panel>
-                    <Button use='primary' onClick={ onSave }>Сохранить</Button>
-                    <Button onClick={ onPrint }>Печать</Button>
-                    <Button onClick={ onClose }>Отмена</Button>
+                    <Gapped gap={ 10 }>
+                        <Button use='primary' onClick={ this.onSave }>Сохранить</Button>
+                        <Button onClick={ this.onPrint }>Печать</Button>
+                        <Button onClick={ onClose }>Отмена</Button>
+                    </Gapped>
                 </SidePage.Footer>
             </SidePage>
         );
@@ -112,7 +132,7 @@ export default class DoctorAppointmentSidepage extends Component<Props, *> {
     onPrint = () => {
         const {
             patientFIO, doctorFIO, patientId, doctorNumber,
-            date, onSave
+            date, onPrint
         } = this.props;
         
         const { diagnosis, recommendations } = this.state;
