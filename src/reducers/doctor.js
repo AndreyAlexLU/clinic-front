@@ -7,7 +7,7 @@ import {
     GET_SPECIALIZATIONS,
     START,
     SUCCESS,
-    FAIL, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE, GET_DOCTOR_APPOINTMENTS, SAVE_CARD_ITEM,
+    FAIL, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE, GET_DOCTOR_APPOINTMENTS, SAVE_CARD_ITEM, GET_ALL_CARD_ITEMS,
 } from '../constants/actions';
 import { handleActions } from 'redux-actions';
 import type { DoctorType } from '../models/Doctor';
@@ -22,6 +22,7 @@ const initialState = {
         step: 15,
         weekIntervals: [],
     },
+    cardItems: {},
     
     doctorLoading: false,
     doctorLoadError: null,
@@ -41,6 +42,8 @@ const initialState = {
     appointmentsLoadError:null,
     saveCardItemLoading: false,
     saveCardItemLoadError: null,
+    getAllCardItemsLoadError: null,
+    getAllCardItemsLoading: false,
 };
 
 export default handleActions({
@@ -231,6 +234,37 @@ export default handleActions({
             ...state,
             saveCardItemLoading: false,
             saveCardItemLoadError: payload,
+        }
+    },
+    [ GET_ALL_CARD_ITEMS + START ]: (state, { payload }) => {
+        return {
+            ...state,
+            getAllCardItemsLoading: true,
+            getAllCardItemsLoadError: null,
+        }
+    },
+    [ GET_ALL_CARD_ITEMS + SUCCESS ]: (state, { payload }) => {
+        const cardItems = payload.reduce((result, current) => {
+            return {
+                ...result,
+                [ current.patientId ]: [
+                    ...(result[current.patientId] || []),
+                    current,
+                ],
+            }
+        }, {});
+        
+        return {
+            ...state,
+            getAllCardItemsLoading: false,
+            cardItems,
+        }
+    },
+    [ GET_ALL_CARD_ITEMS + FAIL ]: (state, { payload }) => {
+        return {
+            ...state,
+            getAllCardItemsLoading: false,
+            getAllCardItemsLoadError: payload,
         }
     },
 }, initialState);

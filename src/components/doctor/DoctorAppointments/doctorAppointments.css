@@ -19,9 +19,13 @@
 }
 
 .doctor-appointment-past {
-    background-color: #b7e2bf;
+    background-color: #dbdfe2;
 }
 
 .doctor-appointment-current {
-    background-color: #dbdfe2;
+    background-color: #b7e2bf;
+}
+
+.doctor-appointment-future {
+    background-color: #c0eaff;
 }

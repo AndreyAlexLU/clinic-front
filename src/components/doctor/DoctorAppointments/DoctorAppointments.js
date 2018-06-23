@@ -7,7 +7,12 @@ import formatDateTime from '../../../utils/formatDateTime';
 import type { User } from '../../../models/User';
 import withRouter from 'react-router-dom/es/withRouter';
 import { connect } from 'react-redux';
-import { getDoctorAppointmentsAction, loadDoctorAction, saveCardItemAction } from '../../../actions/doctor';
+import {
+    getAllCardItemsAction,
+    getDoctorAppointmentsAction,
+    loadDoctorAction,
+    saveCardItemAction
+} from '../../../actions/doctor';
 import type { DoctorType } from '../../../models/Doctor';
 import { Button } from 'retail-ui/components/all';
 import DoctorAppointmentSidepage from './DoctorAppointmentSidepage/DoctorAppointmentSidepage';
@@ -17,15 +22,19 @@ type Props = {|
     doctor: DoctorType,
     user: User,
     appointments: Object[],
+    cardItems: Object,
     
     doctorLoading: boolean,
     doctorLoadError: ?Error,
     saveCardItemLoading: boolean,
     saveCardItemLoadError: ?Error,
+    getAllCardItemsLoading: boolean,
+    getAllCardItemsLoadError: ?Error,
     
     getAppointments: (doctorNumber: number) => void,
     getDoctor: (login: string) => void,
     saveCardItem: (cardItem: CardItem) => void,
+    getAllCardItems: () => void,
 |};
 
 type State = {
@@ -41,12 +50,16 @@ class DoctorAppointments extends Component<Props, State> {
     };
     
     componentDidMount() {
-        const { user, doctor, getDoctor, getAppointments } = this.props;
+        const { user, doctor, getDoctor, getAppointments, cardItems, getAllCardItems } = this.props;
         
         if (!doctor.personalNumber) {
             getDoctor(user.login);
         } else {
             getAppointments(doctor.personalNumber);
+        }
+        
+        if (Object.keys(cardItems).length === 0) {
+            getAllCardItems();
         }
     }
     
@@ -65,7 +78,7 @@ class DoctorAppointments extends Component<Props, State> {
     }
     
     render() {
-        const { appointments, doctor, saveCardItem, saveCardItemLoading, saveCardItemLoadError } = this.props;
+        const { appointments, doctor, saveCardItem, saveCardItemLoading, saveCardItemLoadError, cardItems } = this.props;
         const { sidepageOpened, currentAppointment } = this.state;
         
         return (
@@ -83,15 +96,25 @@ class DoctorAppointments extends Component<Props, State> {
                     appointmentDate.setMinutes(timeChunks[1]);
                     
                     const formattedDate = formatDateTime(appointmentDate);
-                    const message = appointmentDate <= currentDate
-                        ? `Прошедший прием`
-                        : `Запланирован прием`;
+                    const message = appointmentDate > currentDate
+                        ? `Запланирован прием`
+                        : appointmentDate.getDay() === currentDate.getDay() &&
+                        appointmentDate.getMonth() === currentDate.getMonth() &&
+                        appointmentDate.getFullYear() === currentDate.getFullYear() ?
+                            'Текущий прием'
+                        : `Прошедший прием`;
                     
                     const classes = cn({
                         'doctor-appointment-rect': true,
                         'doctor-appointment-past': appointmentDate <= currentDate,
-                        'doctor-appointment-current': appointmentDate > currentDate,
+                        'doctor-appointment-current': appointmentDate.getDay() === currentDate.getDay() &&
+                        appointmentDate.getMonth() === currentDate.getMonth() &&
+                        appointmentDate.getFullYear() === currentDate.getFullYear(),
+                        'doctor-appointment-future': appointmentDate > currentDate,
                     });
+                    
+                    const hasCardItem = cardItems[appointment.patientId] &&
+                        cardItems[appointment.patientId].findIndex(c => c.date === date);
                     
                     return (
                         <div className={ classes }>
@@ -105,7 +128,9 @@ class DoctorAppointments extends Component<Props, State> {
                                 { getFullName(appointment)}
                             </span>
                             <br/>
-                            { appointmentDate <= currentDate && (
+                            { appointmentDate.getDay() === currentDate.getDay() &&
+                                appointmentDate.getMonth() === currentDate.getMonth() &&
+                                appointmentDate.getFullYear() === currentDate.getFullYear() && !hasCardItem && (
                                 <Button onClick={ () => this.onOpenSidepage(appointment) }>
                                     Заполнить карту
                                 </Button>
@@ -151,11 +176,14 @@ const props = ({ user, doctor }) => {
         user: user.user,
         doctor: doctor.doctor,
         appointments: doctor.appointments,
+        cardItems: doctor.cardItems,
     
         doctorLoading: doctor.doctorLoading,
         doctorLoadError: doctor.doctorLoadError,
         saveCardItemLoading: doctor.saveCardItemLoading,
         saveCardItemLoadError: doctor.saveCardItemLoadError,
+        getAllCardItemsLoading: doctor.getAllCardItemsLoading,
+        getAllCardItemsLoadError: doctor.getAllCardItemsLoadError,
     };
 };
 
@@ -163,6 +191,7 @@ const actions = {
     getAppointments: getDoctorAppointmentsAction,
     getDoctor: loadDoctorAction,
     saveCardItem: saveCardItemAction,
+    getAllCardItems: getAllCardItemsAction,
 };
 
 export default withRouter(connect(props, actions)(DoctorAppointments));

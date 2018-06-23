@@ -13,6 +13,7 @@ export const SAVE_DOCTOR = 'SAVE_DOCTOR';
 export const UPDATE_SCHEDULE = 'UPDATE_SCHEDULE';
 export const GET_SCHEDULE = 'GET_SCHEDULE';
 export const SAVE_CARD_ITEM = 'SAVE_CARD_ITEM';
+export const GET_ALL_CARD_ITEMS = 'GET_ALL_CARD_ITEMS';
 
 // timetable
 export const LOAD_TIMETABLE = 'LOAD_TIMETABLE';

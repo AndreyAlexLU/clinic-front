@@ -8,7 +8,7 @@ import {
     GET_SPECIALIZATIONS,
     START,
     FAIL,
-    SUCCESS, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE, GET_DOCTOR_APPOINTMENTS, SAVE_CARD_ITEM,
+    SUCCESS, SAVE_DOCTOR, UPDATE_SCHEDULE, GET_SCHEDULE, GET_DOCTOR_APPOINTMENTS, SAVE_CARD_ITEM, GET_ALL_CARD_ITEMS,
 } from '../constants/actions';
 import Doctor from '../components/appointment/Doctors/Doctor/Doctor';
 import type { DoctorType } from '../models/Doctor';
@@ -156,6 +156,22 @@ export const saveCardItemAction = (cardItem: CardItem) => {
             dispatch(saveCardItemSuccess(response.data));
         } catch (err) {
             dispatch(saveCardItemFail(err));
+        }
+    };
+};
+
+const getAllCardItemsStart = createAction(GET_ALL_CARD_ITEMS + START);
+const getAllCardItemsSuccess = createAction(GET_ALL_CARD_ITEMS + SUCCESS);
+const getAllCardItemsFail = createAction(GET_ALL_CARD_ITEMS + FAIL);
+
+export const getAllCardItemsAction = () => {
+    return async (dispatch: Dispatch) => {
+        try {
+            dispatch(getAllCardItemsStart());
+            const response = await DoctorsApi.getAllCardItems();
+            dispatch(getAllCardItemsSuccess(response.data));
+        } catch (err) {
+            dispatch(getAllCardItemsFail(err));
         }
     };
 };

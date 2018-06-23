@@ -40,5 +40,9 @@ export const DoctorsApi = {
     
     saveCardItem(cardItem: CardItem) {
         return axiosInstance.post(`${prefix}/saveCardItem`, cardItem);
+    },
+    
+    getAllCardItems() {
+        return axiosInstance.get(`${prefix}/getAllCardItems`);
     }
 };
