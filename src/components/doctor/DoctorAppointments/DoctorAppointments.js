@@ -17,6 +17,8 @@ import type { DoctorType } from '../../../models/Doctor';
 import { Button } from 'retail-ui/components/all';
 import DoctorAppointmentSidepage from './DoctorAppointmentSidepage/DoctorAppointmentSidepage';
 import type { CardItem } from '../../../models/CardItem';
+import DoctorAppointmentCardSidepage from './DoctorAppointmentCardSidepage/DoctorAppointmentCardSidepage';
+import Toast from 'retail-ui/components/Toast/index';
 
 type Props = {|
     doctor: DoctorType,
@@ -40,6 +42,8 @@ type Props = {|
 type State = {
     sidepageOpened: boolean,
     currentAppointment: Object,
+    currentCard: Object,
+    sidepageCardOpened: Object,
 }
 
 class DoctorAppointments extends Component<Props, State> {
@@ -47,6 +51,8 @@ class DoctorAppointments extends Component<Props, State> {
     state = {
         sidepageOpened: false,
         currentAppointment: {},
+        sidepageCardOpened: false,
+        currentCard: {},
     };
     
     componentDidMount() {
@@ -64,7 +70,12 @@ class DoctorAppointments extends Component<Props, State> {
     }
     
     componentDidUpdate(prevProps: Props) {
-        const { doctorLoading, doctorLoadError, doctor, getAppointments, user } = this.props;
+        const {
+            saveCardItemLoading, saveCardItemLoadError,
+            doctorLoading, doctorLoadError, doctor, getAppointments, user, getAllCardItems
+        } = this.props;
+        
+        const { currentCard } = this.state;
         
         if (prevProps.doctorLoading && !doctorLoading) {
             if (!doctorLoadError) {
@@ -75,11 +86,18 @@ class DoctorAppointments extends Component<Props, State> {
         if (prevProps.user.login !== user.login) {
             getAppointments(doctor.personalNumber);
         }
+    
+        if (prevProps.saveCardItemLoading && !saveCardItemLoading) {
+            if (!saveCardItemLoadError) {
+                this.onOpenCardSidepage(currentCard);
+                getAllCardItems();
+            }
+        }
     }
     
     render() {
         const { appointments, doctor, saveCardItem, saveCardItemLoading, saveCardItemLoadError, cardItems } = this.props;
-        const { sidepageOpened, currentAppointment } = this.state;
+        const { sidepageOpened, currentAppointment, sidepageCardOpened, currentCard } = this.state;
         
         return (
             <div className='doctor-appointments-grid'>
@@ -113,9 +131,9 @@ class DoctorAppointments extends Component<Props, State> {
                         'doctor-appointment-future': appointmentDate > currentDate,
                     });
                     
-                    const hasCardItem = cardItems[appointment.patientId] &&
-                        cardItems[appointment.patientId].findIndex(c => c.date === date);
-                    
+                    const foundCard = cardItems[appointment.patientId]
+                        && cardItems[appointment.patientId].find(c => c.date === date);
+                    console.log(date, foundCard, appointment.patientId);
                     return (
                         <div className={ classes }>
                             <span>
@@ -130,11 +148,17 @@ class DoctorAppointments extends Component<Props, State> {
                             <br/>
                             { appointmentDate.getDay() === currentDate.getDay() &&
                                 appointmentDate.getMonth() === currentDate.getMonth() &&
-                                appointmentDate.getFullYear() === currentDate.getFullYear() && !hasCardItem && (
+                                appointmentDate.getFullYear() === currentDate.getFullYear() && !foundCard && (
                                 <Button onClick={ () => this.onOpenSidepage(appointment) }>
                                     Заполнить карту
                                 </Button>
                             ) }
+                            
+                            { foundCard && (
+                                <Button onClick={ () => this.onOpenCardSidepage(foundCard) }>
+                                    Посмотреть заключение
+                                </Button>
+                            )}
                         </div>
                     )
                 })}
@@ -150,12 +174,41 @@ class DoctorAppointments extends Component<Props, State> {
                     loadError={ saveCardItemLoadError }
 
                     onClose={ this.onCloseSidepage }
-                    onSave={ saveCardItem }
-                    
+                    onSave={ this.onSave }
+                    onPrint={ null }
+                />
+    
+                <DoctorAppointmentCardSidepage
+                    sidepageOpened={ sidepageCardOpened }
+                    card={ currentCard }
+        
+                    onClose={ this.onCloseCardSidepage }
+                    onPrint={ null }
                 />
             </div>
         );
     }
+    
+    onSave = (cardItem: CardItem) => {
+        this.setState({
+            currentCard: cardItem,
+        });
+        
+        this.props.saveCardItem(cardItem);
+    };
+    
+    onOpenCardSidepage = (foundCard) => {
+        this.setState({
+            currentCard: foundCard,
+            sidepageCardOpened: true,
+        });
+    };
+    
+    onCloseCardSidepage = () => {
+        this.setState({
+            sidepageCardOpened: false,
+        })
+    };
     
     onOpenSidepage = (appointment: Object) => {
         this.setState({
