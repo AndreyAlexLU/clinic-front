@@ -7,7 +7,8 @@ import { getSpecializationsAction } from '../../../actions/doctor';
 import { connect } from 'react-redux';
 import type { Statistics } from '../../../models/Statistics';
 import { getPatientsNumberAction, getStatisticsAction } from '../../../actions/admin';
-import { Gapped, Switcher } from 'retail-ui/components/all';
+import { Button, Gapped, Switcher } from 'retail-ui/components/all';
+import printJS from 'print-js';
 
 ReactChartkick.addAdapter(Chart)
 
@@ -40,48 +41,55 @@ class AdminStatistics extends Component<Props, State> {
         const { isMonth } = this.state;
         
         return (
-            <div className='admin-statistics'>
-                <Gapped vertical gap={20}>
+            <div className='admin-statistics-wrapper'>
+                <div className='admin-statistics'>
+                    <Gapped vertical gap={20}>
                     <span>
                         Общее количество зарегистрированных пациентов: <strong>{ patientsNumber.toString() }</strong>
                     </span>
-    
-                    <Switcher
-                        label="Статистика за период"
-                        items={[
-                            { label: 'Неделя', value: false },
-                            { label: 'Месяц', value: true },
-        
-                        ]}
-                        value={ isMonth }
-                        onChange={ this.onChangePeriod }
-                    />
-    
-                    <figure>
-                        <LineChart
-                            messages={{empty: "Нет данных"}}
-                            data={ statistics.money }
-                            width="800px" height="500px"
+            
+                        <Switcher
+                            label="Статистика за период"
+                            items={[
+                                { label: 'Неделя', value: false },
+                                { label: 'Месяц', value: true },
+                
+                            ]}
+                            value={ isMonth }
+                            onChange={ this.onChangePeriod }
                         />
-                        <figcaption>
-                            Статистика прибыли
-                        </figcaption>
-                    </figure>
-    
-                    <figure>
-                        <LineChart
-                            messages={{empty: "Нет данных"}}
-                            data={ statistics.patients }
-                            width="800px" height="500px"
-                        />
-                        <figcaption>
-                            Статистика посещений пациентов
-                        </figcaption>
-                    </figure>
-                </Gapped>
+            
+                        <figure>
+                            <LineChart
+                                messages={{empty: "Нет данных"}}
+                                data={ statistics.money }
+                                width="800px" height="500px"
+                            />
+                            <figcaption>
+                                Статистика прибыли
+                            </figcaption>
+                        </figure>
+            
+                        <figure>
+                            <LineChart
+                                messages={{empty: "Нет данных"}}
+                                data={ statistics.patients }
+                                width="800px" height="500px"
+                            />
+                            <figcaption>
+                                Статистика посещений пациентов
+                            </figcaption>
+                        </figure>
+                    </Gapped>
+                </div>
             </div>
+            
         );
     }
+    
+    onPrint = () => {
+        printJS('stat', 'html');
+    };
     
     onChangePeriod = (_, isMonth) => {
         this.setState({ isMonth });
