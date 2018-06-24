@@ -1,0 +1,16 @@
+.admin-statistics {
+    padding: 20px 35px;
+}
+
+figure {
+    margin: 0 auto;
+    display: inline-block;
+    margin: 20px; /* adjust as needed */
+}
+figure img {
+    vertical-align: top;
+}
+figure figcaption {
+    background-color: lightgray;
+    text-align: center;
+}
